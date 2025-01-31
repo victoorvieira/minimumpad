@@ -1,0 +1,4 @@
+/home/victorvieira/dev/minimumpad/backend/minimumPad/src/main/java/com/minimumApp/minimumPad/MinimumPadApplication.java
+/home/victorvieira/dev/minimumpad/backend/minimumPad/src/main/java/com/minimumApp/minimumPad/controller/NoteController.java
+/home/victorvieira/dev/minimumpad/backend/minimumPad/src/main/java/com/minimumApp/minimumPad/model/Note.java
+/home/victorvieira/dev/minimumpad/backend/minimumPad/src/main/java/com/minimumApp/minimumPad/repository/NoteRepository.java

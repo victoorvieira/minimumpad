@@ -1,0 +1,4 @@
+com/minimumApp/minimumPad/repository/NoteRepository.class
+com/minimumApp/minimumPad/MinimumPadApplication.class
+com/minimumApp/minimumPad/controller/NoteController.class
+com/minimumApp/minimumPad/model/Note.class

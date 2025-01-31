@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/img/favicon-32x32.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>minimumpad - Editor de Textos Online</title>
+<style>
+html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+header {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.social-links {
+    display: flex;
+    background-color: transparent;
+    gap: 15px; 
+}
+
+.social-links a {
+    text-decoration: none;
+    color: #007BFF; 
+    transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+    color: #0056b3; 
+}
+
+main {
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 1.2rem;
+    max-width: 600px; /* Limit width for readability */
+}
+
+.button-4 {
+  appearance: none;
+  background-color: #FAFBFC;
+  border: 1px solid rgba(27, 31, 35, 0.15);
+  border-radius: 6px;
+  box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0, rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+  box-sizing: border-box;
+  color: #24292E;
+  cursor: pointer;
+  display: inline-block;
+  font-family: system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  list-style: none;
+  padding: 6px 16px;
+  position: relative;
+  transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+  word-wrap: break-word;
+}
+
+.button-4:hover {
+  background-color: #F3F4F6;
+  text-decoration: none;
+  transition-duration: 0.1s;
+}
+
+.button-4:disabled {
+  background-color: #FAFBFC;
+  border-color: rgba(27, 31, 35, 0.15);
+  color: #959DA5;
+  cursor: default;
+}
+
+.button-4:active {
+  background-color: #EDEFF2;
+  box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
+  transition: none 0s;
+}
+
+.button-4:focus {
+  outline: 1px transparent;
+}
+
+.button-4:before {
+  display: none;
+}
+
+.button-4:-webkit-details-marker {
+  display: none;
+}
+
+</style>
+</head>
+<body>
+    <header>
+        <div class="social-links">
+            <a href="https://github.com/victoorvieira/minimumpad" target="_blank"><img width="35px" src="img/icons8-github-100.png"></a>
+        </div>
+    </header>
+    <main>
+        <h1>minimumpad</h1>
+        <p>Edite textos online de forma simples e eficiente!</p>
+        <button class="button-4" role="button" id="createNoteBtn">Comece a escrever!</button>
+        <button class="button-4" role="button" id="searchNoteBtn"><img width="15px" src="img/icons8-search-50.png"></button>
+    </main>
+
+    <script>
+        document.getElementById('createNoteBtn').addEventListener('click', async () => {
+            const response = await fetch('http://54.165.171.152:8080/minimumPad-0.0.1-SNAPSHOT/api/notes', { method: 'POST' });
+            const { url } = await response.json();
+            window.location.href = `note.html?note=${url}`;
+        });
+    </script>
+
+</body>
+</html>

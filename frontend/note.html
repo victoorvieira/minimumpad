@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="/img/favicon-32x32.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>minimumpad - Editor de Textos Online</title>
+
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          margin: 5px;
+        }
+        .textarea-wrapper {
+          display: flex;
+          position: relative;
+        }
+        .line-numbers {
+          background-color: #f4f4f4;
+          color: #888;
+          padding: 10px;
+          text-align: right;
+          border-right: 1px solid #ddd;
+          user-select: none;
+        }
+        .line-numbers span {
+          display: block;
+          line-height: 1.6;
+          font-size: 14px;
+        }
+        textarea {
+          border: 1px solid #ddd;
+          padding: 10px;
+          resize: none;
+          font-family: system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+          font-size: 14px;
+          line-height: 1.6;
+          flex: 1;
+          outline: none;
+          overflow-y: hidden;
+          
+        }
+        .saveButton {
+            background-color: #fff;
+            border: none;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            height: 25px;
+            
+        }
+        .saveButton:hover{
+            background-color: rgb(255, 255, 255);
+
+        }
+        .barraSuperior{
+            background-color: #f4f4f4;
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            font-size: 16px;
+            width: 100%;
+            height: 30px;
+            
+        }
+        .barraInferior{
+          background-color: #586356;
+            border: none;
+            color: #f4f4f4;
+            text-align: right;
+            padding-right: 2px;
+            text-decoration: none;
+            display: flexbox;
+            font-size: 12px;
+            width: 100%;
+            height: 25px;
+            align-items: center;
+            align-self: center;
+            align-content: center;
+        }
+        .barIcons{ 
+          background-color: transparent;
+            padding-top: 5px;
+            padding-bottom: 3px;
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            height: 25px;
+        }
+        .barIcons:hover{ 
+          cursor: pointer;
+        }
+        .barIcons:active{ 
+          background-color: #eef3f1;
+          cursor: pointer;
+        }
+        .extendMenu{
+          background-color: #f4f4f4;
+          padding-bottom: 50px;
+          border-right: 2px solid #ddd;
+          border-left: none;
+          border-top: none;
+          width: 30px;
+          font-family: system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+          font-size: 16px;
+          font-weight: 800;
+          color: #586356;
+        }
+        .noteTitle{
+          display: flex;
+          padding-top: 5px;
+          margin-right: 15px;
+          color: #586356;
+            justify-content: center;
+            align-items: center;
+            height: 20px;
+            position: absolute;
+            right: 0;
+          width: auto;
+          border-radius: 5px;
+          float: right;
+        }
+        .noteTitle:focus{
+          background-color: #f4f4f4;
+          color: #24292E;
+        }
+
+
+
+
+      </style>
+
+</head>
+
+
+<body>
+<!--    <div class="box">
+        <div id="rectangle"></div>
+        <div><textarea class="textarea" id="noteContent" ></textarea></div>
+    </div> -->
+        <!-- Testando text area com numeracao nas linhas-->
+
+        <div class="barraSuperior">
+          <div id="noteTitle" class="noteTitle" contenteditable="true">Sem Titulo</div>
+        <div><button id="expandMenu" class="extendMenu">::</button></div>
+        <div><button id="updatecreateNoteBtn" class="barIcons" ><img src="img/icons8-save-20.png"></button></div>
+        <div><button id="downloadNoteBtn" class="barIcons" ><img width="20px" src="img/icons8-baixar-128.png"></button></div>
+        </div>
+        <div class="textarea-wrapper">
+            <div class="line-numbers" id="lineNumbers"></div>
+            <textarea id="noteContent" rows="22" placeholder="Escreva aqui..."></textarea>
+        </div>
+        <div class="barraInferior">
+            08cdfa06-008c-49e1-b60e-9082634683b9
+        </div>
+          
+
+
+          <script>
+            const textarea = document.getElementById('noteContent');
+            const lineNumbers = document.getElementById('lineNumbers');
+        
+            function updateLineNumbers() {
+              const lines = textarea.value.split('\n').length;
+              lineNumbers.innerHTML = '';
+              for (let i = 1; i <= lines; i++) {
+                const lineNumber = document.createElement('span');
+                lineNumber.textContent = i;
+                lineNumbers.appendChild(lineNumber);
+              }
+            }
+        
+            // Atualiza a numeração ao carregar a página
+            updateLineNumbers();
+        
+            // Atualiza a numeração ao digitar ou rolar
+            textarea.addEventListener('input', updateLineNumbers);
+            textarea.addEventListener('scroll', () => {
+              lineNumbers.scrollTop = textarea.scrollTop;
+            });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const noteUrl = urlParams.get('note');
+        const textContent = document.getElementById('noteContent');
+        const updatecreateNoteBtn = document.getElementById('updatecreateNoteBtn');
+
+        // Carregar conteúdo da nota
+        async function loadNote() {
+            const response = await fetch(`http://54.165.171.152:8080/minimumPad-0.0.1-SNAPSHOT/api/notes/${noteUrl}`);
+            const { conteudo } = await response.json();
+            textContent.value = conteudo;
+        }
+
+        // Salvar conteúdo automaticamente
+        //textarea.addEventListener('input', async () => {
+          //  await fetch(`http://54.165.171.152:8080/minimumPad-0.0.1-SNAPSHOT/api/notes/${noteUrl}`, {
+            //    method: 'PUT',
+            //    headers: { 'Content-Type': 'application/json' },
+            //    body: JSON.stringify({ conteudo: textarea.value })
+           // });
+        //});
+
+        // Acionando API de atualizacao somente quando clica no botao
+        document.getElementById('updatecreateNoteBtn').addEventListener('click', async () => {
+           await fetch(`http://54.165.171.152:8080/minimumPad-0.0.1-SNAPSHOT/api/notes/${noteUrl}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ conteudo: textarea.value })
+            });
+        });
+
+        // funcao para verificar se o titulo esta vazio e voltar para o valor padrao "Sem Titulo"
+        noteTitle.addEventListener('blur', checkContent);
+        function checkContent() {
+          if (noteTitle.textContent.trim() == '') {
+            noteTitle.textContent = 'Sem Titulo'
+          }
+        }
+
+        loadNote();
+
+
+
+          </script>
+
+
+<!--
+    <script>
+        //const noteUrl = window.location.pathname.split('?').pop();
+        //const noteUrl = "d1991fa6-56c8-41cd-b0c2-9e04327eb5f2";
+        const urlParams = new URLSearchParams(window.location.search);
+        const noteUrl = urlParams.get('note');
+        const textarea = document.getElementById('noteContent');
+        const updatecreateNoteBtn = document.getElementById('updatecreateNoteBtn');
+
+        // Carregar conteúdo da nota
+        async function loadNote() {
+            const response = await fetch(`http://54.165.171.152:8080/minimumPad-0.0.1-SNAPSHOT/api/notes/${noteUrl}`);
+            const { conteudo } = await response.json();
+            textarea.value = conteudo;
+        }
+
+        // Salvar conteúdo automaticamente
+        //textarea.addEventListener('input', async () => {
+          //  await fetch(`http://54.165.171.152:8080/minimumPad-0.0.1-SNAPSHOT/api/notes/${noteUrl}`, {
+            //    method: 'PUT',
+            //    headers: { 'Content-Type': 'application/json' },
+            //    body: JSON.stringify({ conteudo: textarea.value })
+           // });
+        //});
+
+        // Acionando API de atualizacao somente quando clica no botao
+        document.getElementById('updatecreateNoteBtn').addEventListener('click', async () => {
+           await fetch(`http://54.165.171.152:8080/minimumPad-0.0.1-SNAPSHOT/api/notes/${noteUrl}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ conteudo: textarea.value })
+            });
+        });
+
+        loadNote();
+
+        const textareaWithNumber = document.getElementById('noteContent');
+        const lineNumbers = document.getElementById('lineNumbers');
+    
+        function updateLineNumbers() {
+          const lines = textareaWithNumber.value.split('\n').length;
+          lineNumbers.innerHTML = '';
+          for (let i = 1; i <= lines; i++) {
+            const lineNumber = document.createElement('span');
+            lineNumber.textContent = i;
+            lineNumbers.appendChild(lineNumber);
+          }
+        }
+    
+        // Atualiza a numeração ao carregar a página
+        updateLineNumbers();
+    
+        // Atualiza a numeração ao digitar ou rolar
+        textareaWithNumber.addEventListener('input', updateLineNumbers);
+        textareaWithNumber.addEventListener('scroll', () => {
+          lineNumbers.scrollTop = textareaWithNumber.scrollTop;
+        });
+
+    </script>
+-->
+
+
+</body>
+</html>
