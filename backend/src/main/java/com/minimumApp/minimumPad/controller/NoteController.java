@@ -48,6 +48,7 @@ public class NoteController {
         Note note = noteRepository.findByUrl(url)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
         note.setConteudo(body.get("conteudo"));
+        note.setTitulo(body.get("titulo"));
         noteRepository.save(note);
         return ResponseEntity.ok().build();
     }

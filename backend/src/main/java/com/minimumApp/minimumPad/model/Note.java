@@ -9,6 +9,8 @@ public class Note {
     @Id
     private String id; // Gerado automaticamente pelo MongoDB
 
+    private String titulo; // TODO: GERAR GETTER/SETTER/TESTAR RECEBIMENTO E RETORNO
+
     private String url; // URL única da nota
     private String conteudo; // Conteúdo da nota
 
@@ -19,6 +21,14 @@ public class Note {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
     public String getUrl() {
