@@ -41,6 +41,16 @@ public class NoteController {
         return ResponseEntity.ok(note);
     }
 
+    // Endpoint para buscar o titulo de uma nota e retornar como String
+    // Codigo comentado ja que o titulo esta sendo recuperado diretamente com o metodo que retorna nota
+//    @CrossOrigin
+//    @GetMapping("/title/{url}")
+//    public String getNoteTitle(@PathVariable String url) {
+//        Note note = noteRepository.findByUrl(url)
+//                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
+//        return note.getTitulo();
+//    }
+
     // Endpoint para atualizar o conteúdo de uma nota
     @CrossOrigin
     @PutMapping("/{url}")
