@@ -4,77 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7fb225d9-989c-4169-84a1-33cd93308fb1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/controller/NoteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/controller/NoteController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/minimumApp/minimumPad/MinimumPadApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/minimumApp/minimumPad/controller/NoteController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/minimumApp/minimumPad/model/Note.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/minimumApp/minimumPad/repository/NoteRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT.war" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT.war.original" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/classes/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/classes/com/minimumApp/minimumPad/MinimumPadApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/classes/com/minimumApp/minimumPad/controller/NoteController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/classes/com/minimumApp/minimumPad/model/Note.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/classes/com/minimumApp/minimumPad/repository/NoteRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/bson-5.2.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/bson-record-codec-5.2.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/jackson-annotations-2.18.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/jackson-core-2.18.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/jackson-databind-2.18.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/jackson-datatype-jdk8-2.18.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/jackson-datatype-jsr310-2.18.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/jackson-module-parameter-names-2.18.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/jakarta.annotation-api-2.1.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/jul-to-slf4j-2.0.16.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/log4j-api-2.24.3.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/log4j-to-slf4j-2.24.3.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/logback-classic-1.5.16.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/logback-core-1.5.16.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/micrometer-commons-1.14.3.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/micrometer-observation-1.14.3.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/mongodb-driver-core-5.2.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/mongodb-driver-sync-5.2.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/slf4j-api-2.0.16.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/snakeyaml-2.3.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-aop-6.2.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-beans-6.2.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-boot-3.4.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-boot-autoconfigure-3.4.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-boot-starter-3.4.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-boot-starter-data-mongodb-3.4.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-boot-starter-json-3.4.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-boot-starter-logging-3.4.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-boot-starter-tomcat-3.4.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-boot-starter-web-3.4.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-context-6.2.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-core-6.2.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-data-commons-3.4.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-data-mongodb-4.4.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-expression-6.2.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-jcl-6.2.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-tx-6.2.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-web-6.2.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/spring-webmvc-6.2.2.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/tomcat-embed-core-10.1.34.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/tomcat-embed-el-10.1.34.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/minimumPad-0.0.1-SNAPSHOT/WEB-INF/lib/tomcat-embed-websocket-10.1.34.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.minimumApp.minimumPad.MinimumPadApplicationTests.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.minimumApp.minimumPad.MinimumPadApplicationTests.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/com/minimumApp/minimumPad/MinimumPadApplicationTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/css/note.css" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/css/note.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/js/note.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/js/note.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/note.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/note.html" afterDir="false" />
-    </list>
+    <list default="true" id="7fb225d9-989c-4169-84a1-33cd93308fb1" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
