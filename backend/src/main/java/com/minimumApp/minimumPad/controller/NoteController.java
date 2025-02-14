@@ -28,6 +28,7 @@ public class NoteController {
         Note note = new Note();
         note.setUrl(UUID.randomUUID().toString()); // Gera uma URL única
         note.setConteudo(""); // Conteúdo inicial vazio
+        note.setTitulo("Sem Titulo"); // Cria Nota com um titulo inicial "Sem Titulo"
         noteRepository.save(note); // Salva no MongoDB
         return ResponseEntity.ok(Map.of("url", note.getUrl()));
     }

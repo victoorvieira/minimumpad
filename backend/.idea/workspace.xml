@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7fb225d9-989c-4169-84a1-33cd93308fb1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/controller/NoteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/controller/NoteController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/note.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/note.html" afterDir="false" />
-    </list>
+    <list default="true" id="7fb225d9-989c-4169-84a1-33cd93308fb1" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -31,7 +27,7 @@
     "Maven.minimumPad [clean,validate,compile...].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "v0.2",
+    "git-widget-placeholder": "v0.3",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/home/victorvieira/dev/minimumpad/backend"
   }
