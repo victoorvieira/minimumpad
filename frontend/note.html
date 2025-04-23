@@ -1,145 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <link rel="icon" type="image/x-icon" href="img/favicon-32x32.ico">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>minimumpad - Editor de Textos Online</title>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z2KWW8B11Z"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    gtag('config', 'G-Z2KWW8B11Z');
-  </script>
-
-  <!-- importar css main -->
-  <link rel="stylesheet" type="text/css" href="css/note.css">
-
-  <!-- importar js main -->
-  <script type="text/javascript" src="js/note.js"></script>
-
-
+  <link rel="icon" type="image/x-icon" href="img/favicon-32x32.ico">
+  <title>minimumpad - Editor de Textos online</title>
+  <link rel="stylesheet" href="css/note.css" />
 </head>
-
-
 <body>
+  <header class="topbar">
+    <span id="logo" class="logo">minimumpad</span>
+    <input type="text" id="noteTitle" placeholder="Sem Título" />
+    <div class="user-actions">
+      <button class="userIcon" id="userIcon" title="Menu"><img src="img/user.svg"></button>
+      <div class="dropdown" id="userMenu">
+        <button id="logoutBtn">Logout</button>
+      </div>
+    </div>
+  </header>
 
-  <div class="barraSuperior">
-    <div id="noteTitle" class="noteTitle" contenteditable="true"></div>
-    <div><button id="expandMenu" class="extendMenu">::</button></div>
-    <div><button id="createNoteBtn" class="barIcons"><img width="20px" src="img/icons8-add-file-48.png"></button></div>
-    <div><button id="updatecreateNoteBtn" class="barIcons"><img src="img/icons8-save-20.png"></button></div>
-    <div><button id="downloadNoteBtn" class="barIcons" onclick="downloadNoteBtn()"><img width="20px"
-          src="img/icons8-baixar-128.png"></button></div>
+  <div class="container">
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <button id="newNoteBtn" title="Nova nota" class="newNoteBtn">Criar Novo Texto</button>
+        <button class="userIconMobile" id="userIconMobile" title="Menu"><img src="img/user.svg"></button>
+        <button class="toggle-btn" id="toggleSidebarBtn">☰</button>
+        
+      </div>
+      <ul id="noteList"><li>Nenhuma nota encontrada.</li></ul>
+
+      <button class="saveNoteBtnDesktop" id="saveNoteBtnDesktop">Salvar</button>
+      <button class="deleteNoteBtnDesktop" id="deleteNoteBtnDesktop">Excluir</button>
+      
+    </div>
+
+    <div class="collapsed-sidebar" id="collapsedSidebar">
+      <button class="open-btn" id="openSidebarBtn">☰</button>
+    </div>
+
+    <div class="mobile-footerBtn" id="mobile-footerBtn">
+
+      <button class="mobile-footer-btn" id="mobileSaveNoteBtn">Salvar</button>
+      <button class="mobile-footer-btn" id="mobileDeleteNoteBtn">Excluir</button>
+
+    </div>
+
+    
+    <div class="mobile-footer" id="mobile-footer">
+
+      <button id="mobileFooterBtn">☰</button>
+    </div>
+
+    <main class="textarea-wrapper">
+      <div class="line-numbers" id="lineNumbers"></div>
+      <textarea class="textarea" id="noteContent" rows="22" placeholder="Escreva aqui..."></textarea>
+
+    </main>
   </div>
-  <div class="textarea-wrapper">
-    <div class="line-numbers" id="lineNumbers"></div>
-    <textarea id="noteContent" rows="22" placeholder="Escreva aqui..."></textarea>
-  </div>
-  <div class="barraInferior" id="barraInferior">
-
-  </div>
-
-  <script>
-
-    const textarea = document.getElementById('noteContent');
-    const noteTitle = document.getElementById('noteTitle');
-    const lineNumbers = document.getElementById('lineNumbers');
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const noteUrl = urlParams.get('note');
-    const textContent = document.getElementById('noteContent');
-    const updatecreateNoteBtn = document.getElementById('updatecreateNoteBtn');
-
-    const noteUrlbarraInferior = document.getElementById('barraInferior');
 
 
-    // Atualiza a numeração ao digitar ou rolar
-    textarea.addEventListener('input', updateLineNumbers);
-    textarea.addEventListener('scroll', () => {
-      lineNumbers.scrollTop = textarea.scrollTop;
-    });
-
-    // Inclui um link para a criação de uma nova nota na barra superior
-    document.getElementById('createNoteBtn').addEventListener('click', async () => {
-      const response = await fetch('https://minimumpad.com/tomcat/api/notes', { method: 'POST' });
-      const { url } = await response.json();
-      //window.location.href = `note.html?note=${url}`;
-      window.open(`note.html?note=${url}`, '_blank').focus();
-    });
-
-
-    // Aciona API de atualização da nota e titulo quando clica no botao de Salvar
-    document.getElementById('updatecreateNoteBtn').addEventListener('click', async () => {
-      updateNote();
-    });
-
-
-    // funcao para verificar se o titulo esta vazio e voltar para o valor padrao "Sem Titulo"
-    noteTitle.addEventListener('blur', checkContent);
-    function checkContent() {
-      if (noteTitle.textContent.trim() == '') {
-        noteTitle.textContent = 'Sem Titulo'
-      }
-    }
-
-    // funcao para tratar TAB e SHIFT+TAB
-    // TODO: Revisar e colocar esse bloco no note.js
-    document.addEventListener("DOMContentLoaded", function () {
-
-      textarea.addEventListener("keydown", function (event) {
-        if (event.key === "Tab") {
-          event.preventDefault(); // Evita sair do campo
-
-          const start = this.selectionStart;
-          const end = this.selectionEnd;
-
-          if (event.shiftKey) {
-            // Comportamento para Shift + Tab (Remover tabulação)
-            const text = this.value;
-            const before = text.substring(0, start);
-            const after = text.substring(end);
-
-            // Verifica se há um tab antes do cursor para remover
-            if (before.endsWith("\t")) {
-              this.value = before.slice(0, -1) + after;
-              this.selectionStart = this.selectionEnd = start - 1;
-            }
-          } else {
-            // Comportamento para Tab (Adicionar tabulação)
-            this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
-            this.selectionStart = this.selectionEnd = start + 1;
-          }
-        }
-
-        // tratar a execucao do update da nota quando clicar CTRL+S
-        if (event.ctrlKey && event.key.toLowerCase() === "s") {
-          event.preventDefault();
-          updateNote();
-
-        }
-
-      });
-    });
-
-
-    // Insere o ID da Nota na barra inferior quando carrega a pagina
-    noteUrlbarraInferior.addEventListener('load', defineUrlBarraInferior());
-
-
-    // Carrega conteudo do texto
-    loadNote();
-
-    // Atualiza a numeração ao carregar a página
-    updateLineNumbers();
-
-
-  </script>
-
+  <script src="js/script-note.js"></script>
 </body>
-
 </html>

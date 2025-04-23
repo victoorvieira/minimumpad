@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="img/favicon-32x32.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>minimumpad - Editor de Textos Online</title>
+  <link rel="stylesheet" type="text/css" href="css/public-note.css">
+  <script type="text/javascript" src="js/public-note.js"></script>
+</head>
+
+<body>
+
+  <div class="barraSuperior">
+    <div class="appTitle">minimumpad</div>
+    <div class="titleWrapper">
+      <div id="noteTitle" class="noteTitle" contenteditable="true">Sem Título</div>
+    </div>
+    <div class="actionsWrapper">
+      <button id="expandMenu" class="extendMenu">|</button>
+      <button id="homeBtn" class="barIcons"><img width="20px" src="img/home.png"></button>
+      <button id="createNoteBtn" class="barIcons"><img width="20px" src="img/newfile.png"></button>
+      <button id="updatecreateNoteBtn" class="barIcons"><img src="img/icons8-save-20.png"></button>
+      <button id="downloadNoteBtn" class="barIcons" onclick="downloadNoteBtn()"><img width="20px" src="img/icons8-baixar-128.png"></button>
+    </div>
+  </div>
+
+  <div class="textarea-wrapper">
+    <div class="line-numbers" id="lineNumbers"></div>
+    <textarea id="noteContent" rows="22" placeholder="Escreva aqui..."></textarea>
+  </div>
+
+  <div class="barraInferior" id="barraInferior"></div>
+
+  <!-- Barra de ações mobile -->
+  <div class="mobile-actions">
+    <button id="homeBtnMobile" class="barIcons"><img width="20px" src="img/home.png"></button>
+    <button id="createNoteBtnMobile" class="barIcons"><img width="20px" src="img/newfile.png"></button>
+    <button id="updateNoteBtnMobile" class="barIcons"><img src="img/icons8-save-20.png"></button>
+    <button id="downloadNoteBtnMobile" class="barIcons" onclick="downloadNoteBtn()"><img width="20px" src="img/icons8-baixar-128.png"></button>
+  </div>
+
+  <script>
+    const textarea = document.getElementById('noteContent');
+    const noteTitle = document.getElementById('noteTitle');
+    const lineNumbers = document.getElementById('lineNumbers');
+    const noteUrlbarraInferior = document.getElementById('barraInferior');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const noteUrl = urlParams.get('note');
+
+    textarea.addEventListener('input', updateLineNumbers);
+    textarea.addEventListener('scroll', () => {
+      lineNumbers.scrollTop = textarea.scrollTop;
+    });
+
+    document.getElementById('homeBtn').addEventListener('click', async () => {
+      window.open(`index.html`, '_blank').focus();
+    });
+
+    document.getElementById('createNoteBtn').addEventListener('click', async () => {
+      const response = await fetch('https://minimumpad.com/tomcat/api/publicnotes', { method: 'POST' });
+      const { url } = await response.json();
+      window.open(`public-note.html?note=${url}`, '_blank').focus();
+    });
+
+    document.getElementById('updatecreateNoteBtn').addEventListener('click', async () => {
+      updateNote();
+    });
+
+    // Botões mobile
+    document.getElementById('homeBtnMobile').addEventListener('click', async () => {
+      window.open(`index.html`, '_blank').focus();
+    });
+
+    document.getElementById('createNoteBtnMobile').addEventListener('click', async () => {
+      const response = await fetch('https://minimumpad.com/tomcat/api/publicnotes', { method: 'POST' });
+      const { url } = await response.json();
+      window.open(`public-note.html?note=${url}`, '_blank').focus();
+    });
+
+    document.getElementById('updateNoteBtnMobile').addEventListener('click', async () => {
+      updateNote();
+    });
+
+    function checkContent() {
+      if (noteTitle.textContent.trim() == '') {
+        noteTitle.textContent = 'Sem Título';
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      textarea.addEventListener("keydown", function (event) {
+        if (event.key === "Tab") {
+          event.preventDefault();
+          const start = this.selectionStart;
+          const end = this.selectionEnd;
+
+          if (event.shiftKey) {
+            const text = this.value;
+            const before = text.substring(0, start);
+            const after = text.substring(end);
+            if (before.endsWith("\t")) {
+              this.value = before.slice(0, -1) + after;
+              this.selectionStart = this.selectionEnd = start - 1;
+            }
+          } else {
+            this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
+            this.selectionStart = this.selectionEnd = start + 1;
+          }
+        }
+
+        if (event.ctrlKey && event.key.toLowerCase() === "s") {
+          event.preventDefault();
+          updateNote();
+        }
+      });
+    });
+
+    noteUrlbarraInferior.addEventListener('load', defineUrlBarraInferior());
+    loadNote();
+    updateLineNumbers();
+    
+    noteTitle.addEventListener('blur', checkContent);
+  </script>
+
+</body>
+
+</html>

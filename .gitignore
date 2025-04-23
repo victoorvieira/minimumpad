@@ -1,0 +1,21 @@
+# arquivos do intellij
+*.iml
+.idea/
+*.ipr
+*.iws
+
+# arquivos do maven
+backend/target/
+
+# arquivos do ambiente
+backend/src/main/resources/application.yml
+backend/.env
+.env
+
+#logs
+*.log
+*.tmp
+*.bak
+*.swp
+
+
