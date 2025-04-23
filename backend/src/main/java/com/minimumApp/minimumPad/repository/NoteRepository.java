@@ -1,10 +1,12 @@
 package com.minimumApp.minimumPad.repository;
 
 import com.minimumApp.minimumPad.model.Note;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import java.util.Optional;
+import org.socialsignin.spring.data.dynamodb.repository.EnableScan;
+import org.springframework.data.repository.CrudRepository;
 
-public interface NoteRepository extends MongoRepository<Note, String> {
-    Optional<Note> findByUrl(String url);
+import java.util.List;
 
+@EnableScan
+public interface NoteRepository extends CrudRepository<Note, String> {
+    List<Note> findByUserId(String userId);
 }
