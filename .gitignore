@@ -1,8 +1,8 @@
 # arquivos do intellij
-*.iml
-.idea/
-*.ipr
-*.iws
+backend/*.iml
+backend/.idea/
+backend/*.ipr
+backend/*.iws
 
 # arquivos do maven
 backend/target/

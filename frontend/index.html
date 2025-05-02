@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>minimumpad - Editor de Textos Online</title>
     <!-- Google tag (gtag.js) - Usado para o Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z2KWW8B11Z"></script>
+    <script async src=" https://www.googletagmanager.com/gtag/js?id=G-Z2KWW8B11Z">
+    </script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
@@ -30,26 +31,113 @@
 
     <header>
         <div class="social-links">
-            <!--<a href="https://github.com/victoorvieira/minimumpad" target="_blank"><img width="35px"
-                    src="img/icons8-github-100.png"></a>-->
-                <div class="main-icon">m</div>
-                          </mask>
-                        </defs>
-                      </svg>
-
+            <div class="main-icon">m</div>
         </div>
+
     </header>
 
     <main>
-        <div class="main-logo">minimumpad</div>
-        <div class="main-description">Crie e Edite textos online de forma simples e eficiente!<br></div>
-        <div class="newLineBtn"><br></div>
-        <div>
-            <a class="login-with-google-btn" href="https://minimumpad.com/oauth2/authorization/google">
-                Faça Login e Comece a Escrever seus textos!
-            </a>
-            <div class="newLineBtn"><br></div>
-            <button class="public-note-btn" id="createNoteBtn">Criar texto anônimo</button>
+        <!-- link to incognito mode -->
+        <div class="left-side-links">
+            <div class="incognito-icon" id="createNoteBtn"><img src="img/incognito.svg"></img></div>
+        </div>
+        <div class="main">
+            <div class="main-itens" id="main-itens">
+                <div class="main-logo">minimumpad</div>
+                <!--<div class="main-description">Crie e Edite textos online de forma simples e eficiente!<br><br></div>-->
+                <div class="main-description">
+                    <span class="highlight-background">Escreva</span> sem interrupções.
+                    Salve de forma segura.
+                    Acesse em qualquer dispositivo.
+                </div>
+                <div class="main-description-mobile">
+                    <span class="highlight-background">Escreva</span> Salve e Acesse de qualquer lugar.
+                </div>
+                <hr class="pre-google-btn">
+                <div>
+                    <a class="login-with-google-btn" href="https://minimumpad.com/oauth2/authorization/google">
+                        Faça Login para começar!
+                    </a>
+                    <div class="newLineBtn"><br></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="introduction-itens" class="introduction-itens">
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h3>Interface Minimalista</h3>
+                    <p>Sem distrações. Um editor de texto simples, direto ao ponto e com design limpo,
+                        para você focar apenas no que importa: suas ideias.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Armazenamento em Nuvem</h3>
+                    <p>Suas anotações são salvas automaticamente e ficam disponíveis online,
+                        sem necessidade de instalar nada ou se preocupar em perder conteúdo.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Dados Guardados de Forma Criptografada</h3>
+                    <p>Todo o conteúdo é protegido com criptografia para garantir sua
+                        privacidade e segurança, mesmo nos menores detalhes.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Acesse em Qualquer Dispositivo</h3>
+                    <p>Use seu bloco de notas pessoal onde quiser: celular,
+                        tablet ou computador. Tudo sincronizado com sua conta.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Organização Simples e Rápida</h3>
+                    <p>Crie, edite, exclua ou atualize suas notas com poucos cliques.
+                        Toda a interface foi pensada para não atrapalhar seu fluxo de escrita.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Anotações Sempre à Mão</h3>
+                    <p>Acesse e edite suas notas de forma rápida e prática.
+                        Ideal para registrar ideias no momento em que elas surgem.</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="about-info">
+
+            <h3>Sobre o minimumpad</h3>
+
+            <div class="text">O minimumpad é um editor de textos online minimalista, projetado para oferecer uma
+                experiência de escrita
+                limpa, prática e sem distrações. Com foco na simplicidade e funcionalidade, ele permite que você crie,
+                edite
+                e organize suas anotações com facilidade, onde quer que esteja.
+
+                Seja para registrar ideias, manter um diário, anotar tarefas ou rascunhar projetos, o MinimumPad oferece
+                as
+                ferramentas essenciais para você se concentrar no que realmente importa: o conteúdo. Suas notas são
+                salvas
+                com segurança na nuvem, vinculadas à sua conta do Google, e acessíveis a qualquer momento, em qualquer
+                dispositivo.
+
+                Além disso, você pode manter notas privadas ou torná-las públicas com um link exclusivo — ideal para
+                compartilhar textos, listas ou conteúdos com outras pessoas.</div>
+        </div>
+
+        <div class="screenshots">
+
+            <h3>Dois Modos: Privado e Compartilhado</h3>
+
+            <div class="image-columns">
+                <div class="column">
+                    Salve textos privados com criptografia, protegidos por login. Ideal para rascunhos, ideias,
+                    lembretes ou qualquer conteúdo pessoal que você quer manter seguro e acessível apenas por
+                    você.<br><br>
+                    <img src="img/screen1.png" alt="private note">
+                </div>
+                <div class="column">
+                    Crie textos públicos para compartilhar com quem quiser. Ideal para listas,
+                    instruções ou qualquer conteúdo que precise ser acessado por outras pessoas.<br><br>
+                    <img src="img/screen2.png" alt="public note">
+                </div>
+            </div>
         </div>
 
     </main>
@@ -62,7 +150,7 @@
     -->
     <script>
 
-       document.getElementById('createNoteBtn').addEventListener('click', async () => {
+        document.getElementById('createNoteBtn').addEventListener('click', async () => {
             const response = await fetch('https://minimumpad.com/tomcat/api/publicnotes', { method: 'POST' });
             const { url } = await response.json();
             window.location.href = `public-note.html?note=${url}`;
