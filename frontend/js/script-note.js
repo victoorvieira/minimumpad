@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   const jwt = localStorage.getItem("jwt");
-  console.log("JWT carregado:", jwt);
+  //console.log("JWT carregado:", jwt);
 
   if (!jwt) {
     alert("Você não está autenticado. Faça login.");
@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function() {
       return response.json();
     })
     .then(notes => {
-      console.log("Notas recebidas:", notes);
+      //console.log("Notas recebidas:", notes);
       noteList.innerHTML = "";
       if (!notes || notes.length === 0) {
         noteList.innerHTML = "<li>Nenhuma nota encontrada.</li>";

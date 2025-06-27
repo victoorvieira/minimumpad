@@ -10,6 +10,7 @@ body {
   color: #333;
   background-color: #f7f7f7;
   height: 100vh;
+  overflow-y: hidden;
 }
 
 header.topbar {
@@ -123,7 +124,7 @@ header.topbar {
   align-items: center;
   border: 1px solid #ddd;
   border-radius: 4px;
-  background-color: #828382;
+  background-color: #4d614e;
   color: #faf9f9;
 }
 
@@ -153,6 +154,7 @@ header.topbar {
   display: flex;
 }
 
+/* v1.0.1 - alterado para tratar a lista de notas */
 #noteList li {
   padding: 0.4rem;
   background-color: #fff;
@@ -161,6 +163,9 @@ header.topbar {
   border: 1px solid #ddd;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  white-space: nowrap;         
+  overflow: hidden;            
+  text-overflow: ellipsis;     
 }
 
 #noteList li:hover {
@@ -168,9 +173,15 @@ header.topbar {
 }
 
 #noteList li.active {
-  background-color: #d0ebff;
-  border-color: #74c0fc;
+  background-color: #4d614e;
+  color: #fcfcfc;
+  font-weight: bold;
+  border-color: #4d614e;
 }
+
+
+
+
 
 .collapsed-sidebar {
   width: 40px;
@@ -220,6 +231,7 @@ flex-grow: 1;
   padding: 0rem;
   display: flex;
   overflow: hidden;
+  overflow-y: hidden;
 }
 
 .line-numbers {
@@ -278,7 +290,7 @@ border-color: #646363;
 }
 
 .newNoteBtn {
-  background-color: #e5eee6;
+  background-color: #5b744d;
   border-radius: 4px;
   border: 1px solid #ddd;
   cursor: pointer;
@@ -374,6 +386,9 @@ border-color: #646363;
 .red-box {
   background-color: rgb(219, 107, 104);
 }
+
+
+
 
 
 @media (max-width: 768px) {

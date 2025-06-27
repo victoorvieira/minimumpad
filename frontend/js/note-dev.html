@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="img/favicon-32x32.ico">
+  <title>minimumpad - Editor de Textos online</title>
+  <link rel="stylesheet" href="css/note.css" />
+</head>
+<body>
+  <header class="topbar">
+    <span id="logo" class="logo">minimumpad</span>
+    <input type="text" id="noteTitle" placeholder="Sem Título" />
+    <div class="user-actions">
+      <button class="userIcon" id="userIcon" title="Menu"><img src="img/user.svg"></button>
+      <div class="dropdown" id="userMenu">
+        <button id="logoutBtn">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <button id="newNoteBtn" title="Nova nota" class="newNoteBtn">Criar Novo Texto</button>
+        <button class="userIconMobile" id="userIconMobile" title="Menu"><img src="img/user.svg"></button>
+        <button class="toggle-btn" id="toggleSidebarBtn">☰</button>
+        
+      </div>
+      <ul id="noteList"><li>Nenhuma nota encontrada.</li></ul>
+
+      <button class="saveNoteBtnDesktop" id="saveNoteBtnDesktop">Salvar</button>
+      <button class="deleteNoteBtnDesktop" id="deleteNoteBtnDesktop">Excluir</button>
+      
+    </div>
+
+    <div class="collapsed-sidebar" id="collapsedSidebar">
+      <button class="open-btn" id="openSidebarBtn">☰</button>
+    </div>
+
+    <div class="mobile-footerBtn" id="mobile-footerBtn">
+
+      <button class="mobile-footer-btn" id="mobileSaveNoteBtn">Salvar</button>
+      <button class="mobile-footer-btn" id="mobileDeleteNoteBtn">Excluir</button>
+
+    </div>
+
+    
+    <div class="mobile-footer" id="mobile-footer">
+
+      <button id="mobileFooterBtn">☰</button>
+    </div>
+
+    <main class="textarea-wrapper">
+      <div class="line-numbers" id="lineNumbers"></div>
+      <textarea class="textarea" id="noteContent" rows="22" placeholder="Escreva aqui..."></textarea>
+
+    </main>
+  </div>
+
+
+  <script src="js/script-note-dev.js"></script>
+</body>
+</html>
