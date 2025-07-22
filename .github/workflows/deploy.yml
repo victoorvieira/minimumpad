@@ -1,4 +1,4 @@
-name: Deploy para EC2
+name: Deploy simples para EC2
 
 on:
   push:
@@ -7,30 +7,35 @@ on:
 
 jobs:
   deploy:
-    name: Copiar arquivos para EC2
+    name: Debug Deploy EC2
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: Configurar chave SSH
+      - name: Verificar conteúdo do repositório
+        run: ls -R .
+
+      - name: Configurar SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Copiar arquivos alterados para EC2
+      - name: Testar conexão com EC2
         run: |
-          # Lista de arquivos alterados no último commit
-          CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
+          echo "Testando conexão SSH com o servidor EC2..."
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo ✅ Conectado com sucesso ao EC2"
 
-          for file in $CHANGED_FILES; do
-            if [ -f "$file" ]; then
-              echo "Copiando $file"
-              rsync -avz --rsync-path="mkdir -p ${{ secrets.EC2_TARGET_PATH }}/$(dirname $file) && rsync" \
-                "$file" \
-                ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_TARGET_PATH }}/"$file"
-            fi
-          done
+      - name: Fazer deploy completo via rsync
+        run: |
+          echo "Enviando tudo via rsync para o servidor..."
+          rsync -avz -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_TARGET_PATH }}/
+
+      - name: Verificar arquivos no servidor remoto
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
+            "ls -lah ${{ secrets.EC2_TARGET_PATH }}"
