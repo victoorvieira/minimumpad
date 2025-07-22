@@ -2,3 +2,5 @@ arquivo criado para validar o pipeline de deploy
 
 
 teste 2
+
+teste 3
