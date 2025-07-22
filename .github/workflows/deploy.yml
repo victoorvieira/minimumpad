@@ -1,4 +1,4 @@
-name: Deploy frontend para EC2
+name: Deploy Frontend
 
 on:
   push:
@@ -6,27 +6,28 @@ on:
       - main
 
 jobs:
-  deploy-frontend:
-    name: Copiar frontend para EC2 se houver alterações
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
-
-      - name: Configurar chave SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+        with:
+          fetch-depth: 2  # necessário para comparar os 2 últimos commits
 
       - name: Verificar se houve alterações no diretório frontend/
-        id: check_changes
+        id: check-frontend
         run: |
-          CHANGED=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | grep '^frontend/')
-          echo "Arquivos alterados no frontend:"
+          PREV_COMMIT=$(git rev-parse HEAD^)
+          LAST_COMMIT=$(git rev-parse HEAD)
+          
+          echo "Analisando alterações entre $PREV_COMMIT e $LAST_COMMIT"
+
+          CHANGED=$(git diff --name-only $PREV_COMMIT $LAST_COMMIT | grep '^frontend/' || true)
+
+          echo "Arquivos modificados:"
           echo "$CHANGED"
+
           if [ -n "$CHANGED" ]; then
             echo "changes=true" >> "$GITHUB_OUTPUT"
             echo "$CHANGED" > changed_files.txt
@@ -34,21 +35,31 @@ jobs:
             echo "changes=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Fazer backup do frontend no servidor
-        if: steps.check_changes.outputs.changes == 'true'
+      - name: Criar ZIP do frontend (caso tenha alterações)
+        if: steps.check-frontend.outputs.changes == 'true'
         run: |
-          TIMESTAMP=$(date +'%Y-%m-%d_%H-%M-%S')
-          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "\
-            mkdir -p /home/ec2-user/minimumpad/backups && \
-            zip -r /home/ec2-user/minimumpad/backups/frontend_backup_$TIMESTAMP.zip /home/ec2-user/minimumpad/frontend \
-          "
+          zip -r frontend.zip frontend/
 
-      - name: Copiar arquivos alterados do frontend para o servidor
-        if: steps.check_changes.outputs.changes == 'true'
-        run: |
-          while read file; do
-            echo "Copiando $file..."
-            rsync -avz --rsync-path="mkdir -p /home/ec2-user/minimumpad/frontend/$(dirname ${file#frontend/}) && rsync" \
-              "$file" \
-              ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ec2-user/minimumpad/frontend/"${file#frontend/}"
-          done < changed_files.txt
+      - name: Copiar arquivos via SCP para o servidor
+        if: steps.check-frontend.outputs.changes == 'true'
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "frontend.zip"
+          target: "~/"
+
+      - name: Reiniciar container frontend no servidor remoto
+        if: steps.check-frontend.outputs.changes == 'true'
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ~
+            unzip -o frontend.zip -d frontend
+            docker restart frontend
