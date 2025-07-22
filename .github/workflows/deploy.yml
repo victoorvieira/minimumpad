@@ -44,10 +44,10 @@ jobs:
         if: steps.check-frontend.outputs.changes == 'true'
         uses: appleboy/scp-action@v0.1.4
         with:
-          host: ${{ secrets.SSH_HOST }}
+          host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_SSH_PORT }}
           source: "frontend.zip"
           target: "~/"
 
@@ -55,10 +55,10 @@ jobs:
         if: steps.check-frontend.outputs.changes == 'true'
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.EC2_SSH_PORT }}
           script: |
             cd ~
             unzip -o frontend.zip -d frontend
