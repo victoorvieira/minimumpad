@@ -7,69 +7,48 @@ on:
 
 jobs:
   deploy-frontend:
-    name: Deploy de arquivos alterados no frontend/
+    name: Copiar frontend para EC2 se houver alterações
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: Verificar conteúdo do repositório
-        run: |
-          echo "Arquivos no repositório:"
-          ls -R .
-
       - name: Configurar chave SSH
         run: |
-          echo "Configurando chave SSH..."
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Verificar arquivos modificados em frontend/
-        id: changed
+      - name: Verificar se houve alterações no diretório frontend/
+        id: check_changes
         run: |
-          echo "Coletando arquivos alterados em 'frontend/'..."
-          git fetch origin main
-          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^frontend/' || true)
-          echo "Arquivos detectados:"
-          echo "$CHANGED_FILES"
-          echo "CHANGED_FILES<<EOF" >> $GITHUB_ENV
-          echo "$CHANGED_FILES" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          CHANGED=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | grep '^frontend/')
+          echo "Arquivos alterados no frontend:"
+          echo "$CHANGED"
+          if [ -n "$CHANGED" ]; then
+            echo "changes=true" >> "$GITHUB_OUTPUT"
+            echo "$CHANGED" > changed_files.txt
+          else
+            echo "changes=false" >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Criar backup do frontend no EC2
-        if: env.CHANGED_FILES != ''
+      - name: Fazer backup do frontend no servidor
+        if: steps.check_changes.outputs.changes == 'true'
         run: |
-          echo "Criando backup do diretório frontend no servidor EC2..."
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
-            BACKUP_DIR="/home/ec2-user/minimumpad/backups"
-            FRONTEND_DIR="/home/ec2-user/minimumpad/frontend"
-            TIMESTAMP=$(date "+%Y-%m-%d_%H-%M")
-            ZIP_NAME="frontend-backup-$TIMESTAMP.zip"
-            mkdir -p "$BACKUP_DIR"
-            cd "$FRONTEND_DIR" && zip -r "$BACKUP_DIR/$ZIP_NAME" .
-            echo "Backup criado em $BACKUP_DIR/$ZIP_NAME"
-          '
+          TIMESTAMP=$(date +'%Y-%m-%d_%H-%M-%S')
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "\
+            mkdir -p /home/ec2-user/minimumpad/backups && \
+            zip -r /home/ec2-user/minimumpad/backups/frontend_backup_$TIMESTAMP.zip /home/ec2-user/minimumpad/frontend \
+          "
 
-      - name: Copiar arquivos alterados do frontend para EC2
-        if: env.CHANGED_FILES != ''
+      - name: Copiar arquivos alterados do frontend para o servidor
+        if: steps.check_changes.outputs.changes == 'true'
         run: |
-          echo "Iniciando cópia para o servidor..."
-          for file in $CHANGED_FILES; do
-            if [ -f "$file" ]; then
-              echo "Enviando $file"
-              rsync -az --no-times --no-perms --no-owner --no-group \
-                -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
-                "$file" \
-                ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ec2-user/minimumpad/"$file"
-            fi
-          done
-
-      - name: Verificar arquivos recebidos no servidor
-        if: env.CHANGED_FILES != ''
-        run: |
-          echo "Verificando conteúdo do frontend no servidor EC2..."
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
-            "ls -lah /home/ec2-user/minimumpad/frontend/"
+          while read file; do
+            echo "Copiando $file..."
+            rsync -avz --rsync-path="mkdir -p /home/ec2-user/minimumpad/frontend/$(dirname ${file#frontend/}) && rsync" \
+              "$file" \
+              ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ec2-user/minimumpad/frontend/"${file#frontend/}"
+          done < changed_files.txt
