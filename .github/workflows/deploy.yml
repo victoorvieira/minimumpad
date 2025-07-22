@@ -1,0 +1,36 @@
+name: Deploy para EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Copiar arquivos para EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar chave SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Copiar arquivos alterados para EC2
+        run: |
+          # Lista de arquivos alterados no último commit
+          CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
+
+          for file in $CHANGED_FILES; do
+            if [ -f "$file" ]; then
+              echo "Copiando $file"
+              rsync -avz --rsync-path="mkdir -p ${{ secrets.EC2_TARGET_PATH }}/$(dirname $file) && rsync" \
+                "$file" \
+                ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_TARGET_PATH }}/"$file"
+            fi
+          done
