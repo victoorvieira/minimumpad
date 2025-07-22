@@ -19,4 +19,8 @@ public class Note {
 
     @DynamoDBAttribute(attributeName = "content")
     private String content;
+
+    // Novo campo para armazenar timestamp da criação (epoch millis)
+    @DynamoDBAttribute(attributeName = "createdAt")
+    private Long createdAt;
 }

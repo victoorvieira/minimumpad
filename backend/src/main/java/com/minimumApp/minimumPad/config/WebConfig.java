@@ -14,8 +14,8 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        //PROD .allowedOrigins("https://minimumpad.com") // TODO: Revisar e filtrar origens
-                         .allowedOrigins("http://localhost:5500") // DEV
+                        .allowedOrigins("https://minimumpad.com") // TODO: Revisar e filtrar origens
+                        // .allowedOrigins("http://localhost:5500") // DEV
                          .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);

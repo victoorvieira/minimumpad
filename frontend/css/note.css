@@ -135,6 +135,16 @@ header.topbar {
   cursor: pointer;
 }
 
+.saveNoteBtnDesktop, .deleteNoteBtnDesktop {
+
+  background-color: #6b926d;
+  color: #faf9f9;
+  border: 1px solid #ddd;
+  height: 1.9rem;
+
+
+}
+
 .sidebar ul {
   list-style: none;
   margin-top: 1rem;

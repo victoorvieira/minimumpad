@@ -6,18 +6,20 @@ document.addEventListener("DOMContentLoaded", function () {
   const noteList = document.getElementById("noteList");
   const sidebar = document.getElementById("sidebar");
   const toggleSidebarBtn = document.getElementById("toggleSidebarBtn");
-
   const mobileFooterBtn = document.getElementById("mobileFooterBtn");
-
   const openSidebarBtn = document.getElementById("openSidebarBtn");
   const userMenu = document.getElementById("userMenu");
   const saveNoteBtnDesktop = document.getElementById("saveNoteBtnDesktop");
   const deleteNoteBtnDesktop = document.getElementById("deleteNoteBtnDesktop");
-
   const mobileSaveNoteBtn = document.getElementById("mobileSaveNoteBtn");
   const mobileDeleteNoteBtn = document.getElementById("mobileDeleteNoteBtn");
 
   let currentNoteId = null;
+  let autosaveTimeout = null;
+  let totalNotes = 0;
+
+  const TITLE_MAX_LENGTH = 100;
+  const CONTENT_MAX_LENGTH = 5000;
 
   const urlParams = new URLSearchParams(window.location.search);
   const tokenFromURL = urlParams.get("token");
@@ -27,7 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   const jwt = localStorage.getItem("jwt");
-  //console.log("JWT carregado:", jwt);
 
   if (!jwt) {
     alert("Você não está autenticado. Faça login.");
@@ -42,7 +43,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("userIconMobile").addEventListener("click", () => {
     userMenu.classList.toggle("visible");
   });
-
 
   function logout() {
     localStorage.removeItem("jwt");
@@ -64,9 +64,15 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function createNewNote() {
+    if (totalNotes >= 100) {
+      showRedBox("Você atingiu o limite de 100 notas.");
+      return;
+    }
+
     currentNoteId = null;
     noteTitle.value = "";
     noteContent.value = "";
+    updateSelectedNoteUI();
   }
 
   newNoteBtn.addEventListener("click", createNewNote);
@@ -75,14 +81,12 @@ document.addEventListener("DOMContentLoaded", function () {
     currentNoteId = null;
     noteTitle.value = "";
     noteContent.value = "";
+    updateSelectedNoteUI();
   }
 
   function loadNotes() {
-    console.log("Carregando notas...");
     fetch("http://localhost:8080/api/notes", {
-      headers: {
-        Authorization: `Bearer ${jwt}`
-      }
+      headers: { Authorization: `Bearer ${jwt}` }
     })
       .then(response => {
         if (!response.ok) {
@@ -95,32 +99,34 @@ document.addEventListener("DOMContentLoaded", function () {
         return response.json();
       })
       .then(notes => {
-        //console.log("Notas recebidas:", notes);
+        totalNotes = notes.length;
         noteList.innerHTML = "";
+
         if (!notes || notes.length === 0) {
           noteList.innerHTML = "<li>Nenhuma nota encontrada.</li>";
         } else {
+          notes.sort((a, b) => {
+            const aDate = new Date(a.createdAt || 0);
+            const bDate = new Date(b.createdAt || 0);
+            return bDate - aDate;
+          });
+
           notes.forEach(note => {
             const li = document.createElement("li");
             li.textContent = note.title;
-            li.title = note.title; // v1.0.1
+            li.title = note.title;
             li.dataset.id = note.id;
-            li.classList.add("note-item"); // v1.0.1
+            li.classList.add("note-item");
+
+            if (note.id === currentNoteId) li.classList.add("active");
+
             li.addEventListener("click", () => {
               currentNoteId = note.id;
               noteTitle.value = note.title;
               noteContent.value = note.content;
-
-              // Remover a classe "active" de todos os itens
-              document.querySelectorAll(".note-item").forEach(item => {
-                item.classList.remove("active");
-              });               
-
-              // Adicionar a classe "active" ao item clicado
-              li.classList.add("active");
-
-
+              updateSelectedNoteUI();
             });
+
             noteList.appendChild(li);
           });
         }
@@ -131,23 +137,36 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   }
 
+  function updateSelectedNoteUI() {
+    document.querySelectorAll(".note-item").forEach(item => {
+      item.classList.toggle("active", item.dataset.id === currentNoteId);
+    });
+  }
+
   function saveNote() {
+    const title = noteTitle.value.trim();
+    const content = noteContent.value.trim();
+
+    if (title.length > TITLE_MAX_LENGTH) {
+      showRedBox(`O título não pode ultrapassar ${TITLE_MAX_LENGTH} caracteres.`);
+      return;
+    }
+
+    if (content.length > CONTENT_MAX_LENGTH) {
+      showRedBox(`O conteúdo não pode ultrapassar ${CONTENT_MAX_LENGTH} caracteres.`);
+      return;
+    }
+
     const note = {
-      title: noteTitle.value.trim() || "Sem Título",
-      content: noteContent.value.trim()
+      title: title || "Sem Título",
+      content: content
     };
 
-    console.log("Salvando nota:", note);
-
-    /*  if (!note.content) {
-       alert("O conteúdo da nota não pode estar vazio.");
-       return;
-     } */
-
-    const url = currentNoteId
-      ? `http://localhost:8080/api/notes/${currentNoteId}`
-      : "http://localhost:8080/api/notes";
-    const method = currentNoteId ? "PUT" : "POST";
+    const isNewNote = !currentNoteId;
+    const url = isNewNote
+      ? "http://localhost:8080/api/notes"
+      : `http://localhost:8080/api/notes/${currentNoteId}`;
+    const method = isNewNote ? "POST" : "PUT";
 
     fetch(url, {
       method: method,
@@ -159,30 +178,46 @@ document.addEventListener("DOMContentLoaded", function () {
     })
       .then(response => {
         if (!response.ok) {
+          if (response.status === 400) {
+            showRedBox("Você atingiu o limite de 100 notas.");
+            throw new Error("Limite de notas atingido");
+          }
           if (response.status === 401) {
-            alert("Sessão expirada. Faça login novamente.");
-            showRedBox("Sessão expirada")
+            showRedBox("Sessão expirada. Faça login novamente.");
             logout();
           }
           throw new Error("Erro ao salvar nota");
         }
         return response.json();
       })
-      .then(() => {
-        showGreenBox("Texto salvo com sucesso!")
+      .then(savedNote => {
+        if (isNewNote && savedNote?.id) {
+          currentNoteId = savedNote.id;
+        }
+        showGreenBox("Texto salvo com sucesso!");
         loadNotes();
       })
       .catch(error => {
         console.error(error);
-        showRedBox("Erro ao Salvar o texto");
+        showRedBox("Erro ao salvar o texto.");
       });
   }
+
+  function triggerAutosave() {
+    clearTimeout(autosaveTimeout);
+    autosaveTimeout = setTimeout(() => {
+      if (noteTitle.value.trim() || noteContent.value.trim() || currentNoteId) {
+        saveNote();
+      }
+    }, 2000);
+  }
+
+  noteTitle.addEventListener("input", triggerAutosave);
+  noteContent.addEventListener("input", triggerAutosave);
 
   saveNoteBtnDesktop.addEventListener("click", saveNote);
   mobileSaveNoteBtn.addEventListener("click", saveNote);
 
-  // v1.0.1
-  // alterado para mostrar redbox ao inves do popup
   function deleteNote() {
     if (!currentNoteId) {
       showRedBox("Selecione uma nota para excluir.");
@@ -191,9 +226,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     fetch(`http://localhost:8080/api/notes/${currentNoteId}`, {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${jwt}`
-      }
+      headers: { Authorization: `Bearer ${jwt}` }
     })
       .then(response => {
         if (!response.ok || response.status !== 204) {
@@ -203,7 +236,6 @@ document.addEventListener("DOMContentLoaded", function () {
           }
           throw new Error("Erro ao excluir nota");
         }
-        //return response.json();
       })
       .then(() => {
         showGreenBox("Nota excluída com sucesso!");
@@ -212,34 +244,31 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .catch(error => {
         console.error(error);
-        showRedBox("Erro ao excluir nota.")
+        showRedBox("Erro ao excluir nota.");
       });
   }
 
   deleteNoteBtnDesktop.addEventListener("click", deleteNote);
   mobileDeleteNoteBtn.addEventListener("click", deleteNote);
 
-  const textarea = document.getElementById('noteContent');
-  const lineNumbers = document.getElementById('lineNumbers');
+  const textarea = document.getElementById("noteContent");
+  const lineNumbers = document.getElementById("lineNumbers");
 
-  textarea.addEventListener('input', updateLineNumbers);
-  textarea.addEventListener('scroll', () => {
+  textarea.addEventListener("input", updateLineNumbers);
+  textarea.addEventListener("scroll", () => {
     lineNumbers.scrollTop = textarea.scrollTop;
   });
 
-
-  // Funcao utilizada para atualizar o numero das linhas na caixa de texto
   function updateLineNumbers() {
-    const lines = textarea.value.split('\n').length;
-    lineNumbers.innerHTML = '';
+    const lines = textarea.value.split("\n").length;
+    lineNumbers.innerHTML = "";
     for (let i = 1; i <= lines; i++) {
-      const lineNumber = document.createElement('span');
+      const lineNumber = document.createElement("span");
       lineNumber.textContent = i;
       lineNumbers.appendChild(lineNumber);
     }
   }
 
-  // tratamento de TAB, SHIFT+TAB e CTRL+S
   textarea.addEventListener("keydown", function (event) {
     if (event.key === "Tab") {
       event.preventDefault();
@@ -266,51 +295,43 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  noteTitle.addEventListener("keydown", function (event) {
+    if (event.ctrlKey && event.key.toLowerCase() === "s") {
+      event.preventDefault();
+      saveNote();
+    }
+  });
+
   window.onload = () => {
     const isMobile = window.innerWidth <= 768;
-    const sidebar = document.getElementById('sidebar');
+    const sidebar = document.getElementById("sidebar");
 
     if (isMobile) {
-      sidebar.classList.add('collapsed');
+      sidebar.classList.add("collapsed");
 
-      const toggleBtn = document.getElementById('toggle-mobile-sidebar');
-      toggleBtn.addEventListener('click', () => {
-        sidebar.classList.toggle('collapsed');
+      const toggleBtn = document.getElementById("toggle-mobile-sidebar");
+      toggleBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("collapsed");
       });
     }
-  }
+  };
 
-  // exibe uma caixa verde com a mensage de sucesso
   function showGreenBox(message) {
     let box = document.createElement("div");
     box.textContent = message;
     box.classList.add("green-box");
-
     document.body.appendChild(box);
-
-    setTimeout(() => {
-      box.remove();
-    }, 3000); // Remove a caixa após 3 segundos
+    setTimeout(() => box.remove(), 3000);
   }
 
-  // exibe uma caixa vermelha com a mensage de erro
   function showRedBox(message) {
     let box = document.createElement("div");
     box.textContent = message;
     box.classList.add("red-box");
-
     document.body.appendChild(box);
-
-    setTimeout(() => {
-      box.remove();
-    }, 3000); // Remove a caixa após 3 segundos
+    setTimeout(() => box.remove(), 3000);
   }
-
-
-
 
   loadNotes();
   updateLineNumbers();
-
-
 });

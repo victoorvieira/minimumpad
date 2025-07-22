@@ -43,15 +43,15 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         // Redireciona para o frontend com o token na URL
         // Define o redirecionamento a partir do ambiente (dev ou prod)
-//  PROD      String redirectUrl = UriComponentsBuilder.fromUriString("https://minimumpad.com/note.html")
-//                .queryParam("token", token)
-//                .build()
-//                .toUriString();
-
-        String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:5500/note-dev.html")
+     String redirectUrl = UriComponentsBuilder.fromUriString("https://minimumpad.com/note.html")
                 .queryParam("token", token)
                 .build()
                 .toUriString();
+       // DEV
+       // String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:5500/note-dev.html")
+       //         .queryParam("token", token)
+       //         .build()
+       //         .toUriString();
 
 
         response.sendRedirect(redirectUrl);

@@ -9,10 +9,15 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/OAuth2LoginSuccessHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/OAuth2LoginSuccessHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/WebConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/css/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/css/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/model/Note.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/model/Note.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/service/NoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/service/NoteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/css/note.css" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/css/note.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/img/favicon-32x32.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/img/favicon-32x32.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/index-dev.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/index-dev.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/js/script-index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/js/script-note.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/js/script-note.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/js/script-note-dev.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/js/script-note-dev.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/note-dev.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/note-dev.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,20 +50,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.minimumpad - default config.executor": "Run",
-    "Maven.minimumPad [clean,validate,compile,test...].executor": "Run",
-    "Maven.minimumPad [clean,validate,compile...].executor": "Run",
-    "Maven.minimumPad [clean].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "1.0.1",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/victorvieira/dev/minimumpad/backend/src/main/resources",
-    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.minimumpad - default config.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.minimumPad [clean,validate,compile,test...].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.minimumPad [clean,validate,compile...].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.minimumPad [clean].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;1.0.1&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/victorvieira/dev/minimumpad/backend/src/main/resources&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources" />
