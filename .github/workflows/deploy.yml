@@ -1,4 +1,4 @@
-name: Deploy simples para EC2
+name: Deploy frontend para EC2
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  deploy:
-    name: Debug Deploy EC2
+  deploy-frontend:
+    name: Deploy de arquivos alterados no frontend/
     runs-on: ubuntu-latest
 
     steps:
@@ -27,20 +27,49 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Testar conexão com EC2
+      - name: Verificar arquivos modificados em frontend/
+        id: changed
         run: |
-          echo "Testando conexão SSH com o servidor EC2..."
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo ✅ Conectado com sucesso ao EC2"
+          echo "Coletando arquivos alterados em 'frontend/'..."
+          git fetch origin main
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^frontend/' || true)
+          echo "Arquivos detectados:"
+          echo "$CHANGED_FILES"
+          echo "CHANGED_FILES<<EOF" >> $GITHUB_ENV
+          echo "$CHANGED_FILES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
-      - name: Fazer deploy completo via rsync (sem preservar atributos)
+      - name: Criar backup do frontend no EC2
+        if: env.CHANGED_FILES != ''
         run: |
-          echo "Enviando arquivos via rsync..."
-          rsync -az --no-times --no-perms --no-owner --no-group \
-            -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ \
-            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_TARGET_PATH }}/
+          echo "Criando backup do diretório frontend no servidor EC2..."
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+            BACKUP_DIR="/home/ec2-user/minimumpad/backups"
+            FRONTEND_DIR="/home/ec2-user/minimumpad/frontend"
+            TIMESTAMP=$(date "+%Y-%m-%d_%H-%M")
+            ZIP_NAME="frontend-backup-$TIMESTAMP.zip"
+            mkdir -p "$BACKUP_DIR"
+            cd "$FRONTEND_DIR" && zip -r "$BACKUP_DIR/$ZIP_NAME" .
+            echo "Backup criado em $BACKUP_DIR/$ZIP_NAME"
+          '
 
-      - name: Verificar arquivos no servidor remoto
+      - name: Copiar arquivos alterados do frontend para EC2
+        if: env.CHANGED_FILES != ''
         run: |
-          echo "Listando arquivos no servidor remoto:"
+          echo "Iniciando cópia para o servidor..."
+          for file in $CHANGED_FILES; do
+            if [ -f "$file" ]; then
+              echo "Enviando $file"
+              rsync -az --no-times --no-perms --no-owner --no-group \
+                -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" \
+                "$file" \
+                ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/ec2-user/minimumpad/"$file"
+            fi
+          done
+
+      - name: Verificar arquivos recebidos no servidor
+        if: env.CHANGED_FILES != ''
+        run: |
+          echo "Verificando conteúdo do frontend no servidor EC2..."
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
-            "ls -lah ${{ secrets.EC2_TARGET_PATH }}"
+            "ls -lah /home/ec2-user/minimumpad/frontend/"
