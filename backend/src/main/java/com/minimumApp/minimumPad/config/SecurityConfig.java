@@ -49,12 +49,20 @@ public class SecurityConfig {
                         .requestMatchers(new CustomPrefixMatcher()).permitAll()
                         .anyRequest().authenticated()
                 )
+                //PROD
                 .oauth2Login(oauth2 -> oauth2
                         .defaultSuccessUrl("https://minimumpad.com/note.html", true)
                         .userInfoEndpoint(userInfo -> userInfo.userService(new DefaultOAuth2UserService()))
                         .successHandler(oAuth2LoginSuccessHandler)
                         .failureHandler(new CustomOAuth2FailureHandler()) // novo handler de falha
                 )
+                //DEV
+                //.oauth2Login(oauth2 -> oauth2
+                //        .defaultSuccessUrl("http://localhost:5500/note.html", true)
+                //        .userInfoEndpoint(userInfo -> userInfo.userService(new DefaultOAuth2UserService()))
+                //        .successHandler(oAuth2LoginSuccessHandler)
+                //        .failureHandler(new CustomOAuth2FailureHandler()) // novo handler de falha
+                //)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedEntryPoint()))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

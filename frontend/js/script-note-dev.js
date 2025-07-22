@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function loadNotes() {
-    fetch("https://minimumpad.com/tomcat/api/notes", {
+    fetch("http://localhost:8080/api/notes", {
       headers: { Authorization: `Bearer ${jwt}` }
     })
       .then(response => {
@@ -164,8 +164,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const isNewNote = !currentNoteId;
     const url = isNewNote
-      ? "https://minimumpad.com/tomcat/api/notes"
-      : `https://minimumpad.com/tomcat/api/notes/${currentNoteId}`;
+      ? "http://localhost:8080/api/notes"
+      : `http://localhost:8080/api/notes/${currentNoteId}`;
     const method = isNewNote ? "POST" : "PUT";
 
     fetch(url, {
@@ -224,7 +224,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    fetch(`https://minimumpad.com/tomcat/api/notes/${currentNoteId}`, {
+    fetch(`http://localhost:8080/api/notes/${currentNoteId}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${jwt}` }
     })

@@ -48,7 +48,7 @@
         </div>
         <div class="main">
             <div class="main-itens" id="main-itens">
-                <div class="main-logo">minimumpad</div>
+                <div class="main-logo">minimumpad_DEV</div>
                 <!--<div class="main-description">Crie e Edite textos online de forma simples e eficiente!<br><br></div>-->
                 <div class="main-description">
                     <span class="highlight-background">Escreva</span> sem interrupções.
@@ -64,7 +64,7 @@
                         Faça Login para começar!
                     </a>-->
                     <button class="login-with-google-btn"
-                        onclick="window.location.href='https://minimumpad.com/oauth2/authorization/google';">
+                        onclick="window.location.href='http://localhost:8080/oauth2/authorization/google';">
                         <span class="google-icon"></span>
                         <span class="btn-text">Faça Login para Começar a Escrever!</span>
                     </button>
@@ -176,7 +176,7 @@
     <script>
 
         document.getElementById('createNoteBtn').addEventListener('click', async () => {
-            const response = await fetch('https://minimumpad.com/tomcat/api/publicnotes', { method: 'POST' });
+            const response = await fetch('http://localhost:8080/api/publicnotes', { method: 'POST' });
             const { url } = await response.json();
             window.location.href = `public-note.html?note=${url}`;
         });

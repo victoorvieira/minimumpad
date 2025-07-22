@@ -42,10 +42,17 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         String token = jwtService.generateToken(username, email);
 
         // Redireciona para o frontend com o token na URL
-        String redirectUrl = UriComponentsBuilder.fromUriString("https://minimumpad.com/note.html")
+        // Define o redirecionamento a partir do ambiente (dev ou prod)
+     String redirectUrl = UriComponentsBuilder.fromUriString("https://minimumpad.com/note.html")
                 .queryParam("token", token)
                 .build()
                 .toUriString();
+       // DEV
+       // String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:5500/note-dev.html")
+       //         .queryParam("token", token)
+       //         .build()
+       //         .toUriString();
+
 
         response.sendRedirect(redirectUrl);
     }

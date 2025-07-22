@@ -15,7 +15,8 @@ public class WebConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("https://minimumpad.com") // TODO: Revisar e filtrar origens
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        // .allowedOrigins("http://localhost:5500") // DEV
+                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }
