@@ -4,49 +4,37 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'frontend/**'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2  # necessário para comparar os 2 últimos commits
+      - name: Checkout código
+        uses: actions/checkout@v3
 
-      - name: Verificar se houve alterações no diretório frontend/
-        id: check-frontend
+      - name: Criar arquivo de chave SSH
         run: |
-          PREV_COMMIT=$(git rev-parse HEAD^)
-          LAST_COMMIT=$(git rev-parse HEAD)
-          
-          echo "Analisando alterações entre $PREV_COMMIT e $LAST_COMMIT"
+          echo "$SSH_KEY" > key.pem
+          chmod 600 key.pem
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
 
-          CHANGED=$(git diff --name-only $PREV_COMMIT $LAST_COMMIT | grep '^frontend/' || true)
-
-          echo "Arquivos modificados:"
-          echo "$CHANGED"
-
-          if [ -n "$CHANGED" ]; then
-            echo "changes=true" >> "$GITHUB_OUTPUT"
-            echo "$CHANGED" > changed_files.txt
-          else
-            echo "changes=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Criar ZIP do frontend (caso tenha alterações)
-        if: steps.check-frontend.outputs.changes == 'true'
+      - name: Fazer backup da pasta frontend no servidor
         run: |
-          zip -r frontend.zip frontend/
+          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+          ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "\
+            mkdir -p /home/ec2-user/minimumpad/backups && \
+            cp -r /home/ec2-user/minimumpad/frontend /home/ec2-user/minimumpad/backups/frontend_$TIMESTAMP"
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
 
-      - name: Copiar arquivos via SCP para o servidor
-        if: steps.check-frontend.outputs.changes == 'true'
-        uses: appleboy/scp-action@v0.1.4
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          port: ${{ secrets.EC2_SSH_PORT }}
-          source: "frontend.zip"
-          target: "~/"
+      - name: Copiar arquivos modificados para o servidor (mantendo estrutura)
+        run: |
+          rsync -avz -e "ssh -i key.pem -o StrictHostKeyChecking=no" frontend/ $SSH_USER@$SSH_HOST:/home/ec2-user/minimumpad/frontend/
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
