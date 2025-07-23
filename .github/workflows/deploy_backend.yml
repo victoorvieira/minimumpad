@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'backend/target/ROOT.war'
+      - 'backend/target'
 
 jobs:
   deploy-backend:
