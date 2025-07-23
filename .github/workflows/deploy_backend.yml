@@ -5,11 +5,16 @@ on:
     branches:
       - main
     paths:
-      - 'backend/target/**'
+      - 'backend/target/ROOT.war'
 
 jobs:
   deploy-backend:
     runs-on: ubuntu-latest
+
+    env:
+      SSH_USER: ${{ secrets.EC2_USER }}
+      SSH_HOST: ${{ secrets.EC2_HOST }}
+      SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
     steps:
       - name: Checkout código
@@ -20,8 +25,6 @@ jobs:
           echo "🔐 Criando arquivo de chave SSH"
           echo "$SSH_KEY" > key.pem
           chmod 600 key.pem
-        env:
-          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Copiar ROOT.war para servidor e manipular backup no container
         run: |
@@ -44,9 +47,5 @@ jobs:
       - name: Reiniciar container mytomcat
         run: |
           echo "♻️ Reiniciando container mytomcat..."
-          ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "\
-            docker restart mytomcat"
+          ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "docker restart mytomcat"
           echo "✅ Container mytomcat reiniciado com sucesso!"
-        env:
-          SSH_USER: ${{ secrets.EC2_USER }}
-          SSH_HOST: ${{ secrets.EC2_HOST }}
