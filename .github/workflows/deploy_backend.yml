@@ -1,0 +1,43 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/target/ROOT.war'
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Criar arquivo de chave SSH
+        run: |
+          echo "$SSH_KEY" > key.pem
+          chmod 600 key.pem
+        env:
+          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: Copiar ROOT.war para servidor e manipular backup no container
+        run: |
+          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+
+          # Comando remoto: criar diretório de backup e copiar arquivo de dentro do container para o host
+          ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "\
+            mkdir -p /home/ec2-user/minimumpad/backups/backend && \
+            docker cp mytomcat:/usr/local/tomcat/webapps/ROOT.war /home/ec2-user/minimumpad/backups/backend/ROOT_${TIMESTAMP}.war || echo 'Arquivo não encontrado, seguindo o processo...'"
+
+          # Copiar novo ROOT.war para o host
+          scp -i key.pem -o StrictHostKeyChecking=no backend/target/ROOT.war $SSH_USER@$SSH_HOST:/home/ec2-user/ROOT.war
+
+          # Copiar ROOT.war para dentro do container e remover do host
+          ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "\
+            docker cp /home/ec2-user/ROOT.war mytomcat:/usr/local/tomcat/webapps/ROOT.war && \
+            rm /home/ec2-user/ROOT.war"
+        env:
+          SSH_USER: ${{ secrets.EC2_USER }}
+          SSH_HOST: ${{ secrets.EC2_HOST }}
