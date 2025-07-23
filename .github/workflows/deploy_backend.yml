@@ -11,6 +11,11 @@ jobs:
   deploy-backend:
     runs-on: ubuntu-latest
 
+    env:
+      SSH_USER: ${{ secrets.EC2_USER }}
+      SSH_HOST: ${{ secrets.EC2_HOST }}
+      SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
@@ -19,31 +24,28 @@ jobs:
         run: |
           echo "$SSH_KEY" > key.pem
           chmod 600 key.pem
-        env:
-          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
-      - name: Copiar ROOT.war para servidor e manipular backup no container
+      - name: Copiar ROOT.war e realizar backup
         run: |
+          set -e
           TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+          echo "Backup ROOT.war do container mytomcat no host remoto..."
 
-          # Comando remoto: criar diretório de backup e copiar arquivo de dentro do container para o host
           ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "\
             mkdir -p /home/ec2-user/minimumpad/backups/backend && \
-            docker cp mytomcat:/usr/local/tomcat/webapps/ROOT.war /home/ec2-user/minimumpad/backups/backend/ROOT_${TIMESTAMP}.war || echo 'Arquivo não encontrado, seguindo o processo...'"
+            docker cp mytomcat:/usr/local/tomcat/webapps/ROOT.war /home/ec2-user/minimumpad/backups/backend/ROOT_${TIMESTAMP}.war || echo 'Arquivo antigo não encontrado, prosseguindo...'"
 
-          # Copiar novo ROOT.war para o host
+          echo "Enviando novo ROOT.war para o servidor..."
           scp -i key.pem -o StrictHostKeyChecking=no backend/target/ROOT.war $SSH_USER@$SSH_HOST:/home/ec2-user/ROOT.war
 
-          # Copiar ROOT.war para dentro do container e remover do host
+          echo "Copiando novo ROOT.war para o container..."
           ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "\
             docker cp /home/ec2-user/ROOT.war mytomcat:/usr/local/tomcat/webapps/ROOT.war && \
             rm /home/ec2-user/ROOT.war"
-            
+
       - name: Reiniciar container mytomcat
         run: |
-          ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "\
-            docker restart mytomcat"
-          
-        env:
-          SSH_USER: ${{ secrets.EC2_USER }}
-          SSH_HOST: ${{ secrets.EC2_HOST }}
+          set -e
+          echo "Reiniciando o container mytomcat..."
+          ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "docker restart mytomcat"
+          echo "Container reiniciado com sucesso."
