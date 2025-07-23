@@ -29,14 +29,14 @@ jobs:
           # Comando remoto: criar diretório de backup e copiar arquivo de dentro do container para o host
           ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "\
             mkdir -p /home/ec2-user/minimumpad/backups/backend && \
-            docker cp mytomcat:/tmp/arquivo1.txt /home/ec2-user/minimumpad/backups/backend/backend_${TIMESTAMP}.txt || echo 'Arquivo não encontrado, seguindo o processo...'"
+            docker cp mytomcat:/usr/local/tomcat/webapps/ROOT.war /home/ec2-user/minimumpad/backups/backend/ROOT_${TIMESTAMP}.war || echo 'Arquivo não encontrado, seguindo o processo...'"
 
           # Copiar novo ROOT.war para o host
           scp -i key.pem -o StrictHostKeyChecking=no backend/target/ROOT.war $SSH_USER@$SSH_HOST:/home/ec2-user/ROOT.war
 
           # Copiar ROOT.war para dentro do container e remover do host
           ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "\
-            docker cp /home/ec2-user/ROOT.war mytomcat:/tmp/ROOT.war && \
+            docker cp /home/ec2-user/ROOT.war mytomcat:/usr/local/tomcat/webapps/ROOT.war && \
             rm /home/ec2-user/ROOT.war"
         env:
           SSH_USER: ${{ secrets.EC2_USER }}
