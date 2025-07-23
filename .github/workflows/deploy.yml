@@ -20,21 +20,19 @@ jobs:
           echo "$SSH_KEY" > key.pem
           chmod 600 key.pem
         env:
-          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Fazer backup da pasta frontend no servidor
         run: |
           TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-          ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "\
-            mkdir -p /home/ec2-user/minimumpad/backups && \
-            cp -r /home/ec2-user/minimumpad/frontend /home/ec2-user/minimumpad/backups/frontend_$TIMESTAMP"
+          ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST 'mkdir -p /home/ec2-user/minimumpad/backups && cp -r /home/ec2-user/minimumpad/frontend /home/ec2-user/minimumpad/backups/frontend_'"$TIMESTAMP"
         env:
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.EC2_USER }}
+          SSH_HOST: ${{ secrets.EC2_HOST }}
 
       - name: Copiar arquivos modificados para o servidor (mantendo estrutura)
         run: |
           rsync -avz -e "ssh -i key.pem -o StrictHostKeyChecking=no" frontend/ $SSH_USER@$SSH_HOST:/home/ec2-user/minimumpad/frontend/
         env:
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.EC2_USER }}
+          SSH_HOST: ${{ secrets.EC2_HOST }}
