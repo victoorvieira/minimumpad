@@ -11,41 +11,42 @@ jobs:
   deploy-backend:
     runs-on: ubuntu-latest
 
-    env:
-      SSH_USER: ${{ secrets.EC2_USER }}
-      SSH_HOST: ${{ secrets.EC2_HOST }}
-      SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
 
       - name: Criar arquivo de chave SSH
         run: |
+          echo "🔐 Criando arquivo de chave SSH"
           echo "$SSH_KEY" > key.pem
           chmod 600 key.pem
+        env:
+          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
-      - name: Copiar ROOT.war e realizar backup
+      - name: Copiar ROOT.war para servidor e manipular backup no container
         run: |
-          set -e
+          echo "📦 Iniciando processo de deploy do backend..."
           TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-          echo "Backup ROOT.war do container mytomcat no host remoto..."
 
+          echo "📁 Criando diretório de backup e tentando copiar ROOT.war de dentro do container..."
           ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "\
             mkdir -p /home/ec2-user/minimumpad/backups/backend && \
-            docker cp mytomcat:/usr/local/tomcat/webapps/ROOT.war /home/ec2-user/minimumpad/backups/backend/ROOT_${TIMESTAMP}.war || echo 'Arquivo antigo não encontrado, prosseguindo...'"
+            docker cp mytomcat:/usr/local/tomcat/webapps/ROOT.war /home/ec2-user/minimumpad/backups/backend/ROOT_${TIMESTAMP}.war || echo '⚠️ ROOT.war não encontrado no container (talvez primeira execução)'"
 
-          echo "Enviando novo ROOT.war para o servidor..."
+          echo "📤 Enviando novo ROOT.war para o servidor EC2..."
           scp -i key.pem -o StrictHostKeyChecking=no backend/target/ROOT.war $SSH_USER@$SSH_HOST:/home/ec2-user/ROOT.war
 
-          echo "Copiando novo ROOT.war para o container..."
+          echo "📥 Copiando novo ROOT.war para dentro do container e limpando temporário..."
           ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "\
             docker cp /home/ec2-user/ROOT.war mytomcat:/usr/local/tomcat/webapps/ROOT.war && \
             rm /home/ec2-user/ROOT.war"
 
       - name: Reiniciar container mytomcat
         run: |
-          set -e
-          echo "Reiniciando o container mytomcat..."
-          ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "docker restart mytomcat"
-          echo "Container reiniciado com sucesso."
+          echo "♻️ Reiniciando container mytomcat..."
+          ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "\
+            docker restart mytomcat"
+          echo "✅ Container mytomcat reiniciado com sucesso!"
+        env:
+          SSH_USER: ${{ secrets.EC2_USER }}
+          SSH_HOST: ${{ secrets.EC2_HOST }}
