@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7fb225d9-989c-4169-84a1-33cd93308fb1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/OAuth2LoginSuccessHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/OAuth2LoginSuccessHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/WebConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/model/Note.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/model/Note.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/service/NoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/service/NoteService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/css/note.css" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/css/note.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/img/favicon-32x32.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/img/favicon-32x32.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/index-dev.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/index-dev.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/js/script-note-dev.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/js/script-note-dev.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/note-dev.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/note-dev.html" afterDir="false" />
-    </list>
+    <list default="true" id="7fb225d9-989c-4169-84a1-33cd93308fb1" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

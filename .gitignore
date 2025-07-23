@@ -1,11 +1,21 @@
 # arquivos do intellij
 backend/*.iml
+backend/.ide#a rquivos do intellij
+backend/*.iml
 backend/.idea/
 backend/*.ipr
 backend/*.iws
 
 # arquivos do maven
-backend/target/
+backend/target/maven-status
+backend/target/generated-sources
+backend/target/classes
+backend/target/test-classes
+backend/target/surefire-reports
+backend/target/generated-test-sources
+backend/target/ROOT
+backend/target/maven-archiver
+backend/target/ROOT.war.original
 
 # arquivos do ambiente
 backend/src/main/resources/application.yml
@@ -18,6 +28,7 @@ backend/.env
 *.log
 *.tmp
 *.bak
-*.swp
-
+*.swpa/
+backend/*.ipr
+backend/*.iws
 
