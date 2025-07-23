@@ -22,30 +22,30 @@ jobs:
 
       - name: Criar arquivo de chave SSH
         run: |
-          echo "🔐 Criando arquivo de chave SSH"
+          echo "Criando arquivo de chave SSH"
           echo "$SSH_KEY" > key.pem
           chmod 600 key.pem
 
       - name: Copiar ROOT.war para servidor e manipular backup no container
         run: |
-          echo "📦 Iniciando processo de deploy do backend..."
+          echo "Iniciando processo de deploy do backend..."
           TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
-          echo "📁 Criando diretório de backup e tentando copiar ROOT.war de dentro do container..."
+          echo "Criando diretório de backup e tentando copiar ROOT.war de dentro do container..."
           ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "\
             mkdir -p /home/ec2-user/minimumpad/backups/backend && \
-            docker cp mytomcat:/usr/local/tomcat/webapps/ROOT.war /home/ec2-user/minimumpad/backups/backend/ROOT_${TIMESTAMP}.war || echo '⚠️ ROOT.war não encontrado no container (talvez primeira execução)'"
+            docker cp mytomcat:/usr/local/tomcat/webapps/ROOT.war /home/ec2-user/minimumpad/backups/backend/ROOT_${TIMESTAMP}.war || echo 'ROOT.war não encontrado no container (talvez primeira execução)'"
 
-          echo "📤 Enviando novo ROOT.war para o servidor EC2..."
+          echo "Enviando novo ROOT.war para o servidor EC2..."
           scp -i key.pem -o StrictHostKeyChecking=no backend/target/ROOT.war $SSH_USER@$SSH_HOST:/home/ec2-user/ROOT.war
 
-          echo "📥 Copiando novo ROOT.war para dentro do container e limpando temporário..."
+          echo "Copiando novo ROOT.war para dentro do container e limpando temporário..."
           ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "\
             docker cp /home/ec2-user/ROOT.war mytomcat:/usr/local/tomcat/webapps/ROOT.war && \
             rm /home/ec2-user/ROOT.war"
 
       - name: Reiniciar container mytomcat
         run: |
-          echo "♻️ Reiniciando container mytomcat..."
+          echo "Reiniciando container mytomcat..."
           ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "docker restart mytomcat"
-          echo "✅ Container mytomcat reiniciado com sucesso!"
+          echo "Container mytomcat reiniciado com sucesso!"
