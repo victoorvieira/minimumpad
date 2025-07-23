@@ -21,6 +21,7 @@ public class Note {
     private String content;
 
     // Novo campo para armazenar timestamp da criação (epoch millis)
+    // TODO: revisar se está funcionando como esperado
     @DynamoDBAttribute(attributeName = "createdAt")
     private Long createdAt;
 }
