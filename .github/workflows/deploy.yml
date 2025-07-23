@@ -30,9 +30,9 @@ jobs:
           SSH_USER: ${{ secrets.EC2_USER }}
           SSH_HOST: ${{ secrets.EC2_HOST }}
 
-      - name: Copiar arquivos modificados para o servidor (mantendo estrutura)
+      - name: Copiar arquivos modificados para o servidor (mantendo estrutura e removendo arquivos deletados)
         run: |
-          rsync -avz -e "ssh -i key.pem -o StrictHostKeyChecking=no" frontend/ $SSH_USER@$SSH_HOST:/home/ec2-user/minimumpad/frontend/
+          rsync -avz --delete -e "ssh -i key.pem -o StrictHostKeyChecking=no" frontend/ $SSH_USER@$SSH_HOST:/home/ec2-user/minimumpad/frontend/
         env:
           SSH_USER: ${{ secrets.EC2_USER }}
           SSH_HOST: ${{ secrets.EC2_HOST }}
