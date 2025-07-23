@@ -38,6 +38,12 @@ jobs:
           ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "\
             docker cp /home/ec2-user/ROOT.war mytomcat:/usr/local/tomcat/webapps/ROOT.war && \
             rm /home/ec2-user/ROOT.war"
+            
+      - name: Reiniciar container mytomcat
+        run: |
+          ssh -i key.pem -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "\
+            docker restart mytomcat"
+          
         env:
           SSH_USER: ${{ secrets.EC2_USER }}
           SSH_HOST: ${{ secrets.EC2_HOST }}
