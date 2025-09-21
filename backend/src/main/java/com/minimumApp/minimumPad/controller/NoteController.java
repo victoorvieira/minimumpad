@@ -2,15 +2,21 @@ package com.minimumApp.minimumPad.controller;
 
 
 import com.minimumApp.minimumPad.model.Note;
+import com.minimumApp.minimumPad.model.User;
+import com.minimumApp.minimumPad.repository.NoteRepository;
+import com.minimumApp.minimumPad.repository.UserRepository;
 import com.minimumApp.minimumPad.service.JwtService;
 import com.minimumApp.minimumPad.service.NoteService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/notes")
@@ -20,6 +26,8 @@ public class NoteController {
     private final NoteService noteService;
     private final JwtService jwtService;
 
+    private NoteRepository noteRepository;
+
     // Exceção personalizada para token inválido ou expirado
     public static class UnauthorizedException extends RuntimeException {
         public UnauthorizedException(String message) {
@@ -27,7 +35,7 @@ public class NoteController {
         }
     }
 
-    // Método para extrair o usuário do token presente no header Authorization
+    // extrair usuario do jwt enviado
     private String getUserIdFromRequest(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         String token = (authHeader != null && authHeader.startsWith("Bearer "))
@@ -45,17 +53,63 @@ public class NoteController {
         }
     }
 
+    // extrair email do jwt enviado
+    private String getUserEmailFromRequest(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        String token = (authHeader != null && authHeader.startsWith("Bearer "))
+                ? authHeader.substring(7)
+                : null;
+
+        if (token == null) {
+            throw new UnauthorizedException("Token não fornecido.");
+        }
+
+        try {
+            return jwtService.getEmailFromToken(token);
+        } catch (Exception e) {
+            throw new UnauthorizedException("Token inválido ou expirado.");
+        }
+    }
+
     // Endpoint para obter as notas do usuário
+//    @GetMapping
+//    public ResponseEntity<List<Note>> getUserNotes(HttpServletRequest request) {
+//        String userId = getUserIdFromRequest(request);
+//        List<Note> notes = noteService.getNotesByUser(userId);
+//
+//        if (notes.isEmpty()) {
+//            return ResponseEntity.noContent().build();
+//        }
+//
+//        return ResponseEntity.ok(notes);
+//    }
+
+    // Novo Endpoint para obter as notas do usuário pelo e-mail
+    // v1.0.3
     @GetMapping
-    public ResponseEntity<List<Note>> getUserNotes(HttpServletRequest request) {
+    public ResponseEntity<List<Note>> getUserNotesByEmail(HttpServletRequest request) {
+        String userEmail = getUserEmailFromRequest(request);
         String userId = getUserIdFromRequest(request);
-        List<Note> notes = noteService.getNotesByUser(userId);
+        List<Note> notes = noteService.getNotesByUserEmail(userEmail, userId);
 
         if (notes.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 
         return ResponseEntity.ok(notes);
+    }
+
+
+
+    // Endpoint para contar as notas de um usuario
+    // v1.0.3
+    @GetMapping("/count")
+    public ResponseEntity<Map<String, Integer>> getNotesCount(HttpServletRequest request) {
+        String userId = getUserIdFromRequest(request);           // usa o mesmo método que pega userId do JWT
+        List<Note> notes = noteService.getNotesByUser(userId);  // pega todas as notas do usuário
+
+        int count = notes.size();                                // conta quantas notas existem
+        return ResponseEntity.ok(Map.of("count", count));       // retorna como JSON { "count": X }
     }
 
     // Endpoint para criar uma nova nota
@@ -65,6 +119,10 @@ public class NoteController {
         note.setUserId(userId);  // Associando o usuário à nota
 
         System.out.println("Tentando salvar nota para o usuário: " + userId);
+
+        // Extrair email do JWT
+        String email = getUserEmailFromRequest(request);
+        note.setUserEmail(email); // Associando também o email à nota
 
 
         Note savedNote = noteService.saveNote(note);

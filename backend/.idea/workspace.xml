@@ -4,7 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7fb225d9-989c-4169-84a1-33cd93308fb1" name="Changes" comment="" />
+    <list default="true" id="7fb225d9-989c-4169-84a1-33cd93308fb1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/MinimumPadApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/MinimumPadApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/JwtUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/JwtUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/OAuth2LoginSuccessHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/OAuth2LoginSuccessHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/WebConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/controller/NoteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/controller/NoteController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/model/Note.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/model/Note.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/repository/NoteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/repository/NoteRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/service/NoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/service/NoteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/js/note-dev.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/js/script-note-dev.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/js/script-note-dev.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/note-dev.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/note-dev.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,7 +37,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="v0.3" />
+        <entry key="$PROJECT_DIR$/.." value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -39,14 +56,15 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Application.minimumpad - default config.executor&quot;: &quot;Run&quot;,
+    &quot;Application.minimumpad.executor&quot;: &quot;Run&quot;,
     &quot;Maven.minimumPad [clean,validate,compile,test...].executor&quot;: &quot;Run&quot;,
     &quot;Maven.minimumPad [clean,validate,compile...].executor&quot;: &quot;Run&quot;,
     &quot;Maven.minimumPad [clean].executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;1.0.1&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;v1.0.3&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/victorvieira/dev/minimumpad/backend/src/main/resources&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/victor/Documentos/dev/minimumpad/backend&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;
   }
 }</component>
@@ -63,7 +81,7 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="minimumpad - default config" type="Application" factoryName="Application">
+    <configuration name="minimumpad" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="com.minimumApp.minimumPad.MinimumPadApplication" />
       <module name="minimumPad" />
       <method v="2">

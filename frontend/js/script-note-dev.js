@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const tokenFromURL = urlParams.get("token");
   if (tokenFromURL) {
     localStorage.setItem("jwt", tokenFromURL);
-    window.history.replaceState({}, document.title, "note.html");
+    window.history.replaceState({}, document.title, "note-dev.html");
   }
 
   const jwt = localStorage.getItem("jwt");
@@ -49,7 +49,13 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = "index.html";
   }
 
+  function accessProfilePage() {
+    window.location.href = "profile.html";
+  }
+
   logoutBtn.addEventListener("click", logout);
+
+  profileBtn.addEventListener("click", accessProfilePage);
 
   toggleSidebarBtn.addEventListener("click", () => {
     sidebar.classList.toggle("collapsed");

@@ -27,6 +27,22 @@ public class NoteService {
         return notes;
     }
 
+    // Novo metodo para recuperar notas pelo email
+    // v1.0.3
+    public List<Note> getNotesByUserEmail(String userEmail, String userId) {
+        List<Note> notes = noteRepository.findByUserEmail(userEmail);
+        for (Note note : notes) {
+            note.setContent(CryptoUtil.decrypt(note.getContent(), userId));
+        }
+        return notes;
+    }
+
+    // contagem de notas do usuario
+    // v1.0.3
+    public int countNotesByUserId(String userId) {
+        return noteRepository.countByUserId(userId);
+    }
+
     public Note saveNote(Note note) {
         validateNote(note, true);
 

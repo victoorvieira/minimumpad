@@ -1,5 +1,6 @@
 package com.minimumApp.minimumPad;
 
+import com.minimumApp.minimumPad.config.SecurityConfig;
 import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRepositories;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
