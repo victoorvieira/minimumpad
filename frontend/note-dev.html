@@ -2,63 +2,196 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/x-icon" href="img/icon-mnp.ico">
-  <title>minimumpad - Editor de Textos online</title>
-  <link rel="stylesheet" href="css/note.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="img/icon-mnp.ico">
+  <title>minimumpad – Editor de Textos online</title>
+
+  <!-- Tailwind CSS (dev CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* Sidebar collapsed */
+    #sidebar.collapsed {
+      width: 0 !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+    }
+
+    /* Show “open” button in header only when sidebar is collapsed */
+    #sidebar.collapsed + .main-content header #openSidebarBtn {
+      display: block !important;
+    }
+
+    /* Note-list items */
+    .note-item {
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .note-item:hover {
+      background-color: #e6e6e6;
+    }
+    .note-item.active {
+      background-color: #4d614e;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    /* Line-numbers gutter */
+    #lineNumbers {
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 1rem 0.5rem;
+      background-color: #f9fafb;
+      color: #6b7280;
+      user-select: none;
+      text-align: right;
+    }
+
+    /* Modern user-menu */
+    #userMenu {
+      position: absolute;
+      top: calc(100% + 0.25rem);
+      right: 0;
+      background: #fff;
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      min-width: 12rem;
+      padding: 0.25rem 0;
+      display: none;
+      transform-origin: top right;
+      animation: fadeInScale 0.15s ease-out forwards;
+      z-index: 50;
+    }
+    #userMenu.visible {
+      display: block;
+    }
+    #userMenu button {
+      width: 100%;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      color: #333;
+      text-align: left;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    #userMenu button:hover {
+      background-color: #f4f4f5;
+    }
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.95) translateY(-5px); }
+      to   { opacity: 1; transform: scale(1)    translateY(0);    }
+    }
+  </style>
 </head>
-<body>
-  <header class="topbar">
-    <span id="logo" class="logo">minimumpad</span>
-    <input type="text" id="noteTitle" placeholder="Sem Título" />
-    <div class="user-actions">
-      <button class="userIcon" id="userIcon" title="Menu"><img src="img/user.svg"></button>
-      <div class="dropdown" id="userMenu">
-        <button id="profileBtn">Informações da Conta</button>
-        <button id="logoutBtn">Logout</button>
+
+<body class="flex h-screen overflow-hidden bg-gray-50">
+
+  <!-- SIDEBAR -->
+  <aside
+    id="sidebar"
+    class="flex flex-col justify-between bg-gray-100 border-r border-gray-200
+           w-64 transition-all duration-300"
+  >
+    <div class="flex flex-col flex-1 overflow-y-auto">
+      <div class="flex items-center justify-between p-4">
+        <button
+          id="newNoteBtn"
+          class="flex-1 bg-green-700 text-white rounded px-3 py-2 mr-2 hover:bg-green-800"
+        >
+          Nova Nota
+        </button>
+        <button
+          id="toggleSidebarBtn"
+          class="hidden md:block text-2xl p-2 hover:bg-gray-200 rounded"
+        >☰</button>
       </div>
+      <ul id="noteList" class="px-4 space-y-1">
+        <li class="note-item text-gray-500">Nenhuma nota encontrada.</li>
+      </ul>
     </div>
-  </header>
+    <div class="p-4 space-y-2">
+      <button
+        id="saveNoteBtnDesktop"
+        class="w-full bg-green-600 text-white rounded px-4 py-2 hover:bg-green-700"
+      >
+        Salvar
+      </button>
+      <button
+        id="deleteNoteBtnDesktop"
+        class="w-full bg-red-600 text-white rounded px-4 py-2 hover:bg-red-700"
+      >
+        Excluir
+      </button>
+    </div>
+  </aside>
 
-  <div class="container">
-    <div class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <button id="newNoteBtn" title="Nova nota" class="newNoteBtn">Criar Novo Texto</button>
-        <button class="userIconMobile" id="userIconMobile" title="Menu"><img src="img/user.svg"></button>
-        <button class="toggle-btn" id="toggleSidebarBtn">☰</button>
-        
+  <!-- MAIN CONTENT -->
+  <div class="main-content flex flex-col flex-1 overflow-hidden">
+
+    <!-- TOPBAR -->
+    <header
+      class="flex items-center bg-gray-100 border-b border-gray-200
+             px-4 py-1 h-10 sticky top-0 z-10 relative"
+    >
+      <!-- open-sidebar (mobile) -->
+      <button
+        id="openSidebarBtn"
+        class="md:hidden text-2xl p-2 hover:bg-gray-200 rounded mr-2"
+      >☰</button>
+
+      <!-- title (100-char max) -->
+      <input
+        id="noteTitle"
+        type="text"
+        placeholder="Sem Título"
+        maxlength="100"
+        class="bg-transparent text-xl font-bold text-gray-800
+               focus:outline-none border-none w-64"
+      />
+
+      <!-- logo + user -->
+      <div class="flex items-center ml-auto space-x-4 relative">
+        <span
+          id="logo"
+          class="hidden md:block text-lg font-bold text-gray-600"
+        >minimumpad</span>
+
+        <button
+          id="userIcon"
+          class="p-1 hover:bg-gray-200 rounded"
+        >
+          <img src="img/user.svg" alt="Menu" class="w-6 h-6"/>
+        </button>
+
+        <div id="userMenu">
+          <button id="profileBtn">Minhas Informações</button>
+        </div>
       </div>
-      <ul id="noteList" class="noteList"><li>Nenhuma nota encontrada.</li></ul>
+    </header>
 
-      <button class="saveNoteBtnDesktop" id="saveNoteBtnDesktop">Salvar</button>
-      <button class="deleteNoteBtnDesktop" id="deleteNoteBtnDesktop">Excluir</button>
-      
-    </div>
-
-    <div class="collapsed-sidebar" id="collapsedSidebar">
-      <button class="open-btn" id="openSidebarBtn">☰</button>
-    </div>
-
-    <div class="mobile-footerBtn" id="mobile-footerBtn">
-
-      <button class="mobile-footer-btn" id="mobileSaveNoteBtn">Salvar</button>
-      <button class="mobile-footer-btn" id="mobileDeleteNoteBtn">Excluir</button>
-
-    </div>
-
-    
-    <div class="mobile-footer" id="mobile-footer">
-
-      <button id="mobileFooterBtn">☰</button>
-    </div>
-
-    <main class="textarea-wrapper">
-      <div class="line-numbers" id="lineNumbers"></div>
-      <textarea class="textarea" id="noteContent" rows="22" placeholder="Escreva aqui..."></textarea>
-
+    <!-- EDITOR + LINE-NUMBERS -->
+    <main
+      class="flex flex-1 overflow-hidden"
+      style="height: calc(95vh - 2.5rem);"
+    >
+      <div id="lineNumbers"></div>
+      <textarea
+        id="noteContent"
+        rows="22"
+        placeholder="Escreva aqui..."
+        maxlength="5000"
+        class="flex-1 p-4 font-mono bg-white focus:outline-none
+               resize-none overflow-y-auto"
+      ></textarea>
     </main>
   </div>
-
 
   <script src="js/script-note-dev.js"></script>
 </body>

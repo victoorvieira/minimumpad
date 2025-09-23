@@ -5,22 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7fb225d9-989c-4169-84a1-33cd93308fb1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../.github/workflows/deploy_backend.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../.github/workflows/deploy_backend.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/MinimumPadApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/MinimumPadApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/JwtUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/JwtUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/OAuth2LoginSuccessHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/OAuth2LoginSuccessHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/config/WebConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/controller/NoteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/controller/NoteController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/model/Note.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/model/Note.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/repository/NoteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/repository/NoteRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/repository/UserRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/service/NoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/service/NoteService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/minimumApp/minimumPad/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/js/note-dev.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/ROOT.war" beforeDir="false" afterPath="$PROJECT_DIR$/target/ROOT.war" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/ROOT.war.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/ROOT.war.original" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-backend-pipeline.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/js/script-note-dev.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/js/script-note-dev.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/note-dev.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/note-dev.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +52,8 @@
   &quot;keyToString&quot;: {
     &quot;Application.minimumpad - default config.executor&quot;: &quot;Run&quot;,
     &quot;Application.minimumpad.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.minimumPad [clean,validate,compile,test,package,verify,install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.minimumPad [clean,validate,compile,test,verify,install].executor&quot;: &quot;Run&quot;,
     &quot;Maven.minimumPad [clean,validate,compile,test...].executor&quot;: &quot;Run&quot;,
     &quot;Maven.minimumPad [clean,validate,compile...].executor&quot;: &quot;Run&quot;,
     &quot;Maven.minimumPad [clean].executor&quot;: &quot;Run&quot;,
@@ -80,7 +77,7 @@
       <recent name="com.minimumApp.minimumPad.security.oauth2" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.minimumpad">
     <configuration name="minimumpad" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="com.minimumApp.minimumPad.MinimumPadApplication" />
       <module name="minimumPad" />
@@ -88,6 +85,46 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="minimumPad [clean,validate,compile,test,verify,install]" type="MavenRunConfiguration" factoryName="Maven" temporary="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="cmdOptions" />
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="clean" />
+                <option value="validate" />
+                <option value="compile" />
+                <option value="test" />
+                <option value="verify" />
+                <option value="install" />
+              </list>
+            </option>
+            <option name="multimoduleDir" />
+            <option name="pomFileName" value="pom.xml" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Maven.minimumPad [clean,validate,compile,test,verify,install]" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">

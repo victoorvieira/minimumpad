@@ -86,7 +86,7 @@ public class NoteController {
 
     // Novo Endpoint para obter as notas do usuário pelo e-mail
     // v1.0.3
-    @GetMapping
+    @GetMapping("/email/{email}")
     public ResponseEntity<List<Note>> getUserNotesByEmail(HttpServletRequest request) {
         String userEmail = getUserEmailFromRequest(request);
         String userId = getUserIdFromRequest(request);
@@ -105,8 +105,9 @@ public class NoteController {
     // v1.0.3
     @GetMapping("/count")
     public ResponseEntity<Map<String, Integer>> getNotesCount(HttpServletRequest request) {
+        String userEmail = getUserEmailFromRequest(request);
         String userId = getUserIdFromRequest(request);           // usa o mesmo método que pega userId do JWT
-        List<Note> notes = noteService.getNotesByUser(userId);  // pega todas as notas do usuário
+        List<Note> notes = noteService.getNotesByUserEmail(userEmail,userId);  // pega todas as notas do usuário
 
         int count = notes.size();                                // conta quantas notas existem
         return ResponseEntity.ok(Map.of("count", count));       // retorna como JSON { "count": X }
@@ -142,6 +143,10 @@ public class NoteController {
         String userId = getUserIdFromRequest(request);
         note.setId(id);
         note.setUserId(userId);
+
+        // Extrair email do JWT
+        String email = getUserEmailFromRequest(request);
+        note.setUserEmail(email); // Associando também o email à nota
 
         Note updatedNote = noteService.updateNote(note);
 

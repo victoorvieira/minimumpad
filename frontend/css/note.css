@@ -17,14 +17,13 @@ header.topbar {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f9f9f9;
+  background-color: #fff;
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid #ccc;
   position: relative;
+  height: 40px;
 }
 
 .logo {
-  font-weight: bold;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1rem;
   color: #646363;
@@ -34,10 +33,11 @@ header.topbar {
 
 #noteTitle {
   font-size: 1rem;
+  color: #444;
   padding: 0.5rem;
   margin: 0 1rem;
   border: none;
-  border-bottom: 1px solid #ccc;
+  border: 1px solid #ccc;
   text-align: center;
   width: 100%;
   max-width: 300px;
@@ -82,7 +82,7 @@ header.topbar {
 .sidebar {
   width: 220px;
   background-color: #f1f1f1;
-  border-right: 1px solid #ccc;
+  border-right: 1px solid #f0eded;
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -150,6 +150,7 @@ header.topbar {
   margin-top: 1rem;
   overflow-y: auto;
   flex-grow: 1;
+  margin-top: 0px;
 }
 
 .sidebar.collapsed {
@@ -223,10 +224,10 @@ header.topbar {
   border: none;
   resize: none;
   background-color: #ffffff;
-  border: 1px solid #ddd;
+
   border-radius: 4px;
   font-family: monospace;
-  line-height: 1.5;
+  line-height: 1.6;
   width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
@@ -242,14 +243,15 @@ flex-grow: 1;
   display: flex;
   overflow: hidden;
   overflow-y: hidden;
+  height: 95%;
 }
 
 .line-numbers {
-background-color: #f1f1f1;
+background-color: #fff;
 color: #999;
 padding: 10px 8px;
 text-align: right;
-border-right: 1px solid #ddd;
+
 user-select: none;
 min-width: 40px;
 font-size: 14px;
@@ -334,7 +336,7 @@ border-color: #646363;
   left: 0;
   width: 100%;
   height: 40px; /* altura do rodapé */
-  background-color: #f1f1f1; /* cor de fundo */
+  background-color: #3c5f3f; /* cor de fundo */
   color: white;
   display: none;
   justify-content: center;
@@ -368,7 +370,7 @@ border-color: #646363;
   align-items: center;
   border: 1px solid #ddd;
   border-radius: 4px;
-  background-color: #828382;
+  background-color: #e93d3d;
   color: #faf9f9;
 }
 

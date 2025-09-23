@@ -46,7 +46,7 @@ public class UserService {
     // Processo para deleção de conta do usuario
     public void deleteUserByEmail(String email) {
         // Deleta todas as notas do usuário
-        //noteRepository.deleteAllByUserEmail(email);
+        noteRepository.deleteAllByUserEmail(email);
 
         // Deleta o usuário
         userRepository.deleteByEmail(email);

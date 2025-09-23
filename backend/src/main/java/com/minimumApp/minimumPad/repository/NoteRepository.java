@@ -10,7 +10,7 @@ import java.util.List;
 @EnableScan
 @EnableScanCount
 public interface NoteRepository extends CrudRepository<Note, String> {
-    List<Note> findByUserId(String userId);
+    //List<Note> findByUserId(String userId);
 
     // Listas notas pelo email
     List<Note> findByUserEmail(String userEmail);
