@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const tokenParam = params.get("token");
   if (tokenParam) {
     localStorage.setItem("jwt", tokenParam);
-    window.history.replaceState({}, document.title, "note-dev.html");
+    window.history.replaceState({}, document.title, "note.html");
   }
 
   const jwt = localStorage.getItem("jwt");

@@ -8,9 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const payload = JSON.parse(atob(token.split(".")[1]));
   const email = payload.sub;
 
-  const userApiUrl = `http://localhost:8080/api/users/email/${email}`;
-  const notesApiUrl = `http://localhost:8080/api/notes/email/${email}`;
-  const userDelUrl = `http://localhost:8080/api/users/me`;
+  const userApiUrl = `https://minimumpad.com/tomcat/api/users/email/${email}`;
+  const notesApiUrl = `https://minimumpad.com/tomcat/api/notes/email/${email}`;
+  const userDelUrl = `https://minimumpad.com/tomcat/api/users/me`;
 
   // Buscar informações do usuário
   fetch(userApiUrl, { headers: { Authorization: `Bearer ${token}` } })
