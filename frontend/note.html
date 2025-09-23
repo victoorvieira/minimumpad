@@ -88,10 +88,39 @@
       from { opacity: 0; transform: scale(0.95) translateY(-5px); }
       to   { opacity: 1; transform: scale(1)    translateY(0);    }
     }
+
+    /* Mobile: fix body scroll, make textarea scrollable only */
+    @media (max-width: 768px) {
+      body {
+        overflow: hidden;
+      }
+      .main-content {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+      .main-content header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+      }
+      .main-content main {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+      }
+      #lineNumbers {
+        height: 100%;
+      }
+      #noteContent {
+        height: 100%;
+        overflow-y: auto;
+      }
+    }
   </style>
 </head>
 
-<body class="flex h-screen overflow-hidden bg-gray-50">
+<body class="flex h-screen bg-gray-50">
   <div class="flex h-full w-full">
 
     <!-- SIDEBAR -->
@@ -129,12 +158,12 @@
     </aside>
 
     <!-- MAIN CONTENT -->
-    <div class="main-content flex flex-col flex-1 overflow-hidden w-full">
+    <div class="main-content flex flex-col flex-1 w-full">
 
       <!-- TOPBAR -->
       <header
         class="flex items-center bg-gray-100 border-b border-gray-200
-               px-4 py-1 h-10 sticky top-0 z-10 relative"
+               px-4 py-1 h-10"
       >
         <button id="openSidebarBtn"
                 class="md:hidden text-2xl p-2 hover:bg-gray-200 rounded mr-2">
@@ -159,13 +188,13 @@
       </header>
 
       <!-- EDITOR + LINE-NUMBERS -->
-      <main class="flex overflow-hidden w-full">
-        <div id="lineNumbers" class="h-[95vh]"></div>
+      <main class="flex w-full overflow-hidden">
+        <div id="lineNumbers"></div>
         <textarea
           id="noteContent"
           placeholder="Escreva aqui..."
           maxlength="5000"
-          class="flex-1 h-[95vh] p-4 font-mono bg-white focus:outline-none resize-none overflow-y-auto"
+          class="flex-1 p-4 font-mono bg-white focus:outline-none resize-none overflow-y-auto"
         ></textarea>
       </main>
     </div>
@@ -174,3 +203,4 @@
   <script src="js/script-note.js"></script>
 </body>
 </html>
+```
