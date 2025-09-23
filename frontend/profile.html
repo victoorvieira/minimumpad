@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="img/icon-mnp.ico">
+  <title>Minhas Informações</title>
+  <link rel="stylesheet" href="css/profile.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Card esquerdo -->
+    <div class="profile-card">
+      <!-- <div class="profile-img">-->
+        <div class="profile-img">
+          <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#969393" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"></circle>
+            <path d="M6 20c0-4 4-6 6-6s6 2 6 6"></path>
+          </svg>
+        </div>
+        <!-- <img src="img/user.svg" alt="User Avatar" id="user-avatar">-->
+      <!--</div>-->
+      <h2 id="user-name">Carregando...</h2>
+      <!--<p class="job-title">User</p>-->
+      <p class="location">-</p>
+      <button class="back-btn" onclick="window.location.href='note-dev.html'">Voltar para o Bloco de Notas</button>
+      <button id="logoutBtnProfile" class="logoutBtnProfile">Sair</button>
+      <button class="delete-btn" id="delete-account">Excluir minha Conta</button>
+    </div>
+
+    <!-- Card direito -->
+    <div class="info-card">
+      <h3>Minhas Informações</h3>
+      <!--<ul>
+       <li><strong>Nome:</strong> <span id="full-name">Carregando...</span></li>
+        <li><strong>E-mail:</strong> <span id="email">Carregando...</span></li>
+        <li><strong>Quantidade atual de notas:</strong> <span id="notes-count">Carregando...</span></li>
+      </ul>-->
+      
+        <strong>Quantidade atual de notas:</strong>
+        <div class="progress-container">
+          <div class="progress-bar" id="notes-progress"></div>
+        </div>
+        <span id="notes-count">Carregando...</span>/100
+      
+    </div>
+  </div>
+
+  <script src="js/script-profile.js"></script>
+</body>
+</html>

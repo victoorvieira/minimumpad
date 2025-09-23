@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -36,6 +37,12 @@ public class SecurityConfig {
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final CustomUserDetailsService userDetailsService;
 
+
+    // Definindo variavel para mapear urls a partir do application.yml
+    @Value("${minimumpad.note-url}")
+    public String noteUrl;
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -47,11 +54,14 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(new CustomPrefixMatcher()).permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/me").authenticated()
                         .anyRequest().authenticated()
                 )
-                //PROD
+                // Atualizado na v1.0.3 para buscar a url a partir do application.yml
+                // Alteração faz com que seja utilizado tanto para dev quanto prod
                 .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl("https://minimumpad.com/note.html", true)
+                        //.defaultSuccessUrl("https://minimumpad.com/note.html", true)
+                        .defaultSuccessUrl(noteUrl, true)
                         .userInfoEndpoint(userInfo -> userInfo.userService(new DefaultOAuth2UserService()))
                         .successHandler(oAuth2LoginSuccessHandler)
                         .failureHandler(new CustomOAuth2FailureHandler()) // novo handler de falha
@@ -92,6 +102,7 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+
 
     // 🔍 Novo handler que loga o erro no console para debug do OAuth2
     public static class CustomOAuth2FailureHandler implements AuthenticationFailureHandler {

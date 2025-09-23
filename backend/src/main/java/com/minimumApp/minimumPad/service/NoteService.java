@@ -19,12 +19,28 @@ public class NoteService {
     private static final int MAX_TITLE_LENGTH = 100;
     private static final int MAX_CONTENT_LENGTH = 5000;
 
-    public List<Note> getNotesByUser(String userId) {
-        List<Note> notes = noteRepository.findByUserId(userId);
+//    public List<Note> getNotesByUser(String userId) {
+//        List<Note> notes = noteRepository.findByUserId(userId);
+//        for (Note note : notes) {
+//            note.setContent(CryptoUtil.decrypt(note.getContent(), userId));
+//        }
+//        return notes;
+//    }
+
+    // Novo metodo para recuperar notas pelo email
+    // v1.0.3
+    public List<Note> getNotesByUserEmail(String userEmail, String userId) {
+        List<Note> notes = noteRepository.findByUserEmail(userEmail);
         for (Note note : notes) {
             note.setContent(CryptoUtil.decrypt(note.getContent(), userId));
         }
         return notes;
+    }
+
+    // contagem de notas do usuario
+    // v1.0.3
+    public int countNotesByUserId(String userId) {
+        return noteRepository.countByUserId(userId);
     }
 
     public Note saveNote(Note note) {
@@ -79,7 +95,7 @@ public class NoteService {
         }
 
         if (isNew) {
-            List<Note> userNotes = noteRepository.findByUserId(note.getUserId());
+            List<Note> userNotes = noteRepository.findByUserEmail(note.getUserEmail());
             if (userNotes.size() >= MAX_NOTES_PER_USER) {
                 throw new RuntimeException("Limite de 100 notas por usuário atingido.");
             }

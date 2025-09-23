@@ -6,6 +6,7 @@ import com.minimumApp.minimumPad.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -22,6 +23,10 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Autowired
     private UserRepository userRepository;
+
+    // Definindo variavel para mapear urls a partir do application.yml
+    @Value("${minimumpad.note-url}")
+    public String noteUrl;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
@@ -41,9 +46,11 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         // Gera o JWT
         String token = jwtService.generateToken(username, email);
 
+
         // Redireciona para o frontend com o token na URL
         // Define o redirecionamento a partir do ambiente (dev ou prod)
-     String redirectUrl = UriComponentsBuilder.fromUriString("https://minimumpad.com/note.html")
+        // Atualizado na v1.0.3 para considerar a variavel noteUrl retornada do application.yml
+     String redirectUrl = UriComponentsBuilder.fromUriString(noteUrl)
                 .queryParam("token", token)
                 .build()
                 .toUriString();

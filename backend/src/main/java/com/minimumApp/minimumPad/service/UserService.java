@@ -2,6 +2,7 @@ package com.minimumApp.minimumPad.service;
 
 
 import com.minimumApp.minimumPad.model.User;
+import com.minimumApp.minimumPad.repository.NoteRepository;
 import com.minimumApp.minimumPad.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private NoteRepository noteRepository;
 
     public User processOAuthPostLogin(String email) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
@@ -38,4 +42,15 @@ public class UserService {
     public void saveUser(User user) {
         userRepository.save(user);
     }
+
+    // Processo para deleção de conta do usuario
+    public void deleteUserByEmail(String email) {
+        // Deleta todas as notas do usuário
+        noteRepository.deleteAllByUserEmail(email);
+
+        // Deleta o usuário
+        userRepository.deleteByEmail(email);
+    }
+
+
 }
