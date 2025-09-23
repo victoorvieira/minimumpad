@@ -6,23 +6,21 @@
   <link rel="icon" href="img/icon-mnp.ico">
   <title>minimumpad – Editor de Textos online</title>
 
-  <!-- Tailwind CSS (dev CDN) -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    /* Sidebar collapsed */
+    /* Sidebar collapse */
     #sidebar.collapsed {
       width: 0 !important;
       padding: 0 !important;
       overflow: hidden !important;
     }
-
-    /* Show “open” button in header only when sidebar is collapsed */
     #sidebar.collapsed + .main-content header #openSidebarBtn {
       display: block !important;
     }
 
-    /* Note-list items */
+    /* Note‐list items */
     .note-item {
       padding: 0.5rem 1rem;
       border-radius: 0.25rem;
@@ -40,11 +38,13 @@
       font-weight: bold;
     }
 
-    /* Line-numbers gutter */
+    /* Line‐numbers gutter – largura ajustada, sem scroll */
     #lineNumbers {
+      width: 4ch;
+      flex-shrink: 0;
       display: flex;
       flex-direction: column;
-      overflow-y: auto;
+      overflow-y: hidden;
       padding: 1rem 0.5rem;
       background-color: #f9fafb;
       color: #6b7280;
@@ -52,7 +52,7 @@
       text-align: right;
     }
 
-    /* Modern user-menu */
+    /* User‐menu */
     #userMenu {
       position: absolute;
       top: calc(100% + 0.25rem);
@@ -92,105 +92,83 @@
 </head>
 
 <body class="flex h-screen overflow-hidden bg-gray-50">
+  <div class="flex h-full w-full">
 
-  <!-- SIDEBAR -->
-  <aside
-    id="sidebar"
-    class="flex flex-col justify-between bg-gray-100 border-r border-gray-200
-           w-64 transition-all duration-300"
-  >
-    <div class="flex flex-col flex-1 overflow-y-auto">
-      <div class="flex items-center justify-between p-4">
-        <button
-          id="newNoteBtn"
-          class="flex-1 bg-green-700 text-white rounded px-3 py-2 mr-2 hover:bg-green-800"
-        >
-          Nova Nota
-        </button>
-        <button
-          id="toggleSidebarBtn"
-          class="hidden md:block text-2xl p-2 hover:bg-gray-200 rounded"
-        >☰</button>
-      </div>
-      <ul id="noteList" class="px-4 space-y-1">
-        <li class="note-item text-gray-500">Nenhuma nota encontrada.</li>
-      </ul>
-    </div>
-    <div class="p-4 space-y-2">
-      <button
-        id="saveNoteBtnDesktop"
-        class="w-full bg-green-600 text-white rounded px-4 py-2 hover:bg-green-700"
-      >
-        Salvar
-      </button>
-      <button
-        id="deleteNoteBtnDesktop"
-        class="w-full bg-red-600 text-white rounded px-4 py-2 hover:bg-red-700"
-      >
-        Excluir
-      </button>
-    </div>
-  </aside>
-
-  <!-- MAIN CONTENT -->
-  <div class="main-content flex flex-col flex-1 overflow-hidden">
-
-    <!-- TOPBAR -->
-    <header
-      class="flex items-center bg-gray-100 border-b border-gray-200
-             px-4 py-1 h-10 sticky top-0 z-10 relative"
+    <!-- SIDEBAR -->
+    <aside
+      id="sidebar"
+      class="flex flex-col justify-between bg-gray-100 border-r border-gray-200
+             w-64 transition-all duration-300"
     >
-      <!-- open-sidebar (mobile) -->
-      <button
-        id="openSidebarBtn"
-        class="md:hidden text-2xl p-2 hover:bg-gray-200 rounded mr-2"
-      >☰</button>
-
-      <!-- title (100-char max) -->
-      <input
-        id="noteTitle"
-        type="text"
-        placeholder="Sem Título"
-        maxlength="100"
-        class="bg-transparent text-xl font-bold text-gray-800
-               focus:outline-none border-none w-64"
-      />
-
-      <!-- logo + user -->
-      <div class="flex items-center ml-auto space-x-4 relative">
-        <span
-          id="logo"
-          class="hidden md:block text-lg font-bold text-gray-600"
-        >minimumpad</span>
-
-        <button
-          id="userIcon"
-          class="p-1 hover:bg-gray-200 rounded"
-        >
-          <img src="img/user.svg" alt="Menu" class="w-6 h-6"/>
-        </button>
-
-        <div id="userMenu">
-          <button id="profileBtn">Minhas Informações</button>
+      <div class="flex flex-col flex-1 overflow-y-auto">
+        <div class="flex items-center justify-between p-4">
+          <button id="newNoteBtn"
+                  class="flex-1 bg-green-700 text-white rounded px-3 py-2 mr-2
+                         hover:bg-green-800">
+            Nova Nota
+          </button>
+          <button id="toggleSidebarBtn"
+                  class="hidden md:block text-2xl p-2 hover:bg-gray-200 rounded">
+            ☰
+          </button>
         </div>
+        <ul id="noteList" class="px-4 space-y-1">
+          <li class="note-item text-gray-500">Nenhuma nota encontrada.</li>
+        </ul>
       </div>
-    </header>
+      <div class="p-4 space-y-2">
+        <button id="saveNoteBtnDesktop"
+                class="w-full bg-green-600 text-white rounded px-4 py-2 hover:bg-green-700">
+          Salvar
+        </button>
+        <button id="deleteNoteBtnDesktop"
+                class="w-full bg-red-600 text-white rounded px-4 py-2 hover:bg-red-700">
+          Excluir
+        </button>
+      </div>
+    </aside>
 
-    <!-- EDITOR + LINE-NUMBERS -->
-    <main
-      class="flex flex-1 overflow-hidden"
-      style="height: calc(95vh - 2.5rem);"
-    >
-      <div id="lineNumbers"></div>
-      <textarea
-        id="noteContent"
-        rows="22"
-        placeholder="Escreva aqui..."
-        maxlength="5000"
-        class="flex-1 p-4 font-mono bg-white focus:outline-none
-               resize-none overflow-y-auto"
-      ></textarea>
-    </main>
+    <!-- MAIN CONTENT -->
+    <div class="main-content flex flex-col flex-1 overflow-hidden w-full">
+
+      <!-- TOPBAR -->
+      <header
+        class="flex items-center bg-gray-100 border-b border-gray-200
+               px-4 py-1 h-10 sticky top-0 z-10 relative"
+      >
+        <button id="openSidebarBtn"
+                class="md:hidden text-2xl p-2 hover:bg-gray-200 rounded mr-2">
+          ☰
+        </button>
+
+        <input id="noteTitle"
+               type="text"
+               placeholder="Sem Título"
+               maxlength="100"
+               class="bg-transparent text-xl font-bold text-gray-800
+                      focus:outline-none border-none w-64"/>
+
+        <div class="flex items-center ml-auto space-x-4 relative">
+          <button id="userIcon" class="p-1 hover:bg-gray-200 rounded">
+            <img src="img/user.svg" alt="Menu" class="w-6 h-6"/>
+          </button>
+          <div id="userMenu">
+            <button id="profileBtn">Minhas Informações</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- EDITOR + LINE-NUMBERS -->
+      <main class="flex overflow-hidden w-full">
+        <div id="lineNumbers" class="h-[95vh]"></div>
+        <textarea
+          id="noteContent"
+          placeholder="Escreva aqui..."
+          maxlength="5000"
+          class="flex-1 h-[95vh] p-4 font-mono bg-white focus:outline-none resize-none overflow-y-auto"
+        ></textarea>
+      </main>
+    </div>
   </div>
 
   <script src="js/script-note-dev.js"></script>

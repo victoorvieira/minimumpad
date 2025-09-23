@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const TITLE_MAX_LENGTH   = 100;
   const CONTENT_MAX_LENGTH = 5000;
 
-  // 1) JWT token via URL → localStorage
+  // JWT via URL → localStorage
   const params     = new URLSearchParams(window.location.search);
   const tokenParam = params.get("token");
   if (tokenParam) {
@@ -35,24 +35,20 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // 2) Extract email from token
+  // Extract email
   const payload = JSON.parse(atob(jwt.split(".")[1]));
   const email   = payload.sub;
 
-  // 3) Collapse sidebar on mobile
+  // Collapse sidebar on mobile
   if (window.innerWidth <= 768) {
     sidebar.classList.add("collapsed");
   }
 
-  // 4) Toggle sidebar
-  toggleSidebarBtn.addEventListener("click", () => {
-    sidebar.classList.toggle("collapsed");
-  });
-  openSidebarBtn.addEventListener("click", () => {
-    sidebar.classList.toggle("collapsed");
-  });
+  // Sidebar toggles
+  toggleSidebarBtn.addEventListener("click", () => sidebar.classList.toggle("collapsed"));
+  openSidebarBtn.addEventListener("click", () => sidebar.classList.toggle("collapsed"));
 
-  // 5) User-menu open/close and outside click
+  // User‐menu open/close
   userIcon.addEventListener("click", e => {
     e.stopPropagation();
     userMenu.classList.toggle("visible");
@@ -62,16 +58,14 @@ document.addEventListener("DOMContentLoaded", () => {
       userMenu.classList.remove("visible");
     }
   });
-  profileBtn.addEventListener("click", () => {
-    window.location.href = "profile.html";
-  });
+  profileBtn.addEventListener("click", () => window.location.href = "profile.html");
 
-  // 6) CRUD bindings
+  // CRUD bindings
   newNoteBtn.addEventListener("click", createNewNote);
   saveNoteBtnDesktop.addEventListener("click", saveNote);
   deleteNoteBtnDesktop.addEventListener("click", deleteNote);
 
-  // 7) Title input: max 100 chars + autosave
+  // Title limit + autosave
   noteTitle.addEventListener("input", () => {
     if (noteTitle.value.length > TITLE_MAX_LENGTH) {
       noteTitle.value = noteTitle.value.slice(0, TITLE_MAX_LENGTH);
@@ -80,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
     triggerAutosave();
   });
 
-  // 8) Content input: max 5000 chars + autosave + line-nums
+  // Content limit + autosave + line‐numbers
   noteContent.addEventListener("input", () => {
     if (noteContent.value.length > CONTENT_MAX_LENGTH) {
       noteContent.value = noteContent.value.slice(0, CONTENT_MAX_LENGTH);
@@ -90,20 +84,20 @@ document.addEventListener("DOMContentLoaded", () => {
     updateLineNumbers();
   });
 
-  // 9) Scroll sync
+  // Sync scroll
   noteContent.addEventListener("scroll", () => {
     lineNumbers.scrollTop = noteContent.scrollTop;
   });
 
-  // 10) Tab indent/outdent + Ctrl+S
+  // Tab indent/outdent & Ctrl+S
   noteContent.addEventListener("keydown", handleTabAndSave);
   noteTitle.addEventListener("keydown", handleTabAndSave);
 
-  // 11) Initial load
+  // Initial load
   loadNotes();
   updateLineNumbers();
 
-  /* ——— FUNCTIONS ——— */
+  /* — FUNCTIONS — */
 
   function loadNotes() {
     fetch(`http://localhost:8080/api/notes/email/${email}`, {
@@ -126,11 +120,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!notes.length) {
           noteList.innerHTML =
             '<li class="note-item text-gray-500">Nenhuma nota encontrada.</li>';
+          createNewNote();
           return;
         }
 
         notes
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))
           .forEach(note => {
             const li = document.createElement("li");
             li.className   = "note-item";
@@ -149,11 +144,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             noteList.appendChild(li);
           });
+
+        if (!currentNoteId) createNewNote();
       })
       .catch(err => {
         console.error(err);
         noteList.innerHTML =
           '<li class="note-item text-gray-500">Nenhuma nota encontrada.</li>';
+        createNewNote();
       });
   }
 
@@ -257,9 +255,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateLineNumbers() {
-    const lines = noteContent.value.split("\n").length;
+    const style      = getComputedStyle(noteContent);
+    let lineHeight   = parseFloat(style.lineHeight);
+    if (isNaN(lineHeight)) {
+      lineHeight = parseFloat(style.fontSize) * 1.2;
+    }
+    const totalLines = Math.ceil(noteContent.scrollHeight / lineHeight);
+
     lineNumbers.innerHTML = "";
-    for (let i = 1; i <= lines; i++) {
+    for (let i = 1; i <= totalLines; i++) {
       const span = document.createElement("span");
       span.textContent = i;
       lineNumbers.appendChild(span);
@@ -267,7 +271,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function handleTabAndSave(event) {
-    // Tab indent/outdent
     if (event.key === "Tab") {
       event.preventDefault();
       const start = this.selectionStart;
@@ -286,8 +289,8 @@ document.addEventListener("DOMContentLoaded", () => {
           this.value.substring(end);
         this.selectionStart = this.selectionEnd = start + 1;
       }
+      updateLineNumbers();
     }
-    // Ctrl+S
     if (event.ctrlKey && event.key.toLowerCase() === "s") {
       event.preventDefault();
       saveNote();
@@ -297,7 +300,13 @@ document.addEventListener("DOMContentLoaded", () => {
   function showGreenBox(msg) {
     const box = document.createElement("div");
     box.textContent = msg;
-    box.classList.add("green-box");
+    box.classList.add(
+      "fixed", "top-4", "right-4",
+      "bg-green-600", "text-white",
+      "px-4", "py-2",
+      "rounded", "shadow-lg",
+      "z-50"
+    );
     document.body.appendChild(box);
     setTimeout(() => box.remove(), 3000);
   }
@@ -305,7 +314,13 @@ document.addEventListener("DOMContentLoaded", () => {
   function showRedBox(msg) {
     const box = document.createElement("div");
     box.textContent = msg;
-    box.classList.add("red-box");
+    box.classList.add(
+      "fixed", "top-4", "right-4",
+      "bg-red-600", "text-white",
+      "px-4", "py-2",
+      "rounded", "shadow-lg",
+      "z-50"
+    );
     document.body.appendChild(box);
     setTimeout(() => box.remove(), 3000);
   }

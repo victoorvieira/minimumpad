@@ -1,221 +1,165 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" class="overflow-x-hidden">
 
 <head>
-    <meta charset="UTF-8">
-    <link rel="icon" type="image/x-icon" href="img/icon-mnp.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>minimumpad - Editor de Textos Online</title>
-    <!-- Google tag (gtag.js) - Usado para o Google Analytics -->
-    <script async src=" https://www.googletagmanager.com/gtag/js?id=G-Z2KWW8B11Z">
-    </script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
+  <meta charset="UTF-8" />
+  <link rel="icon" href="img/icon-mnp.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>minimumpad – Editor de Textos Online</title>
 
-        gtag('config', 'G-Z2KWW8B11Z');
-    </script>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- adsense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8512542238560411"
-    crossorigin="anonymous"></script>
-    
-    <!-- Final da Tag Google Analytics-->
-
-    <!-- importar css main -->
-    <link rel="stylesheet" type="text/css" href="css/index.css">
-
-    <!-- importar js main -->
-    <script type="text/javascript" src="js/index.js"></script>
-
-
+  <style>
+    /* Box‐sizing e overflow */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    html, body {
+      overflow-x: hidden;
+    }
+    .hero-title {
+      font-family: Arial, sans-serif;
+    }
+  </style>
 </head>
 
-<body>
+<body class="bg-gray-50 text-gray-800 overflow-x-hidden">
 
-    <header>
-        <div class="social-links">
-            <div ><img src="img/minimum_logo.jpg" height="30px" width="30px"></div>
+  <!-- HEADER compacta -->
+  <header class="bg-white shadow w-full">
+    <div class="w-full flex items-center justify-between py-2 px-4 sm:px-6 lg:px-12">
+      <img src="img/minimum_logo.jpg" alt="minimumpad" class="h-8 w-8 flex-shrink-0" />
+      <button id="createNoteBtn"
+        class="p-2 bg-gray-200 hover:bg-gray-300 rounded-full transition flex-shrink-0">
+        <img src="img/incognito.svg" alt="Modo Anônimo" class="h-6 w-6" />
+      </button>
+    </div>
+  </header>
+
+  <main class="w-full px-4 sm:px-6 lg:px-12 py-12 space-y-20">
+
+    <!-- HERO & AÇÃO RÁPIDA -->
+    <section
+      class="w-full flex flex-col items-center text-center gap-6
+             md:flex-row md:items-start md:justify-start md:text-left">
+      <div class="w-full md:w-1/2">
+        <h2 class="hero-title text-5xl sm:text-6xl md:text-7xl font-extrabold leading-tight">
+          minimumpad
+        </h2>
+        <p class="text-base sm:text-lg mt-4 w-full">
+          <span class="bg-green-200 px-2 py-1 rounded">Escreva sem interrupções.</span>
+          Salve de forma segura. Acesse em qualquer dispositivo.
+        </p>
+        <button id="loginBtn"
+          class="mt-6 w-full sm:w-auto inline-flex justify-center items-center bg-gray-600 hover:bg-gray-700 text-white font-medium px-6 py-3 rounded-lg shadow">
+          <img
+            src="https://developers.google.com/identity/images/g-logo.png"
+            alt="Google"
+            class="h-5 w-5 mr-2 flex-shrink-0"
+          />
+          Faça Login para Começar a Escrever!
+        </button>
+      </div>
+    </section>
+
+    <!-- RECURSOS -->
+    <section class="w-full">
+      <h2 class="text-3xl font-bold text-center mb-8">Recursos</h2>
+      <div class="w-full grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
+          <h3 class="font-semibold mb-2">Interface Minimalista</h3>
+          <p class="text-gray-600">Sem distrações. Foco no que importa: suas ideias.</p>
         </div>
-
-    </header>
-
-    <main>
-        <!-- link to incognito mode -->
-        <div class="left-side-links">
-            <div class="incognito-icon" id="createNoteBtn"><img src="img/incognito.svg"></img></div>
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
+          <h3 class="font-semibold mb-2">Armazenamento em Nuvem</h3>
+          <p class="text-gray-600">Suas notas são salvas automaticamente e ficam online.</p>
         </div>
-        <div class="main">
-            <div class="main-itens" id="main-itens">
-                <div class="main-logo">minimumpad</div>
-                <!--<div class="main-description">Crie e Edite textos online de forma simples e eficiente!<br><br></div>-->
-                <div class="main-description">
-                    <span class="highlight-background">Escreva sem interrupções.</span>
-                    Salve de forma segura.
-                    Acesse em qualquer dispositivo.
-                </div>
-                <div class="main-description-mobile">
-                    <span class="highlight-background">Escreva</span> Salve e Acesse de qualquer lugar.
-                </div>
-                <hr class="pre-google-btn">
-                <div>
-                    <!--<a class="login-with-google-btn" href="https://minimumpad.com/oauth2/authorization/google">
-                        Faça Login para começar!
-                    </a>-->
-                    <button class="login-with-google-btn"
-                        onclick="window.location.href='http://localhost:8080/oauth2/authorization/google';">
-                        <span class="google-icon"></span>
-                        <span class="btn-text">Faça Login para Começar a Escrever!</span>
-                    </button>
-                    <div class="newLineBtn"><br></div>
-                </div>
-            </div>
-
-        </div>        
-
-        <div id="introduction-itens" class="introduction-itens">
-            <div class="features-grid">
-                <div class="feature-item">
-                    <h3>Interface Minimalista</h3>
-                    <p><span style="color:rgb(228, 228, 228);">Sem distrações. Um editor de texto simples, direto ao ponto e com design limpo,
-                        para você focar apenas no que importa: suas ideias.</span></p>
-                </div>
-                <div class="feature-item">
-                    <h3>Armazenamento em Nuvem</h3>
-                    <p><span style="color:rgb(228, 228, 228);">Suas anotações são salvas automaticamente e ficam disponíveis online,
-                        sem necessidade de instalar nada ou se preocupar em perder conteúdo.</span></p>
-                </div>
-                <div class="feature-item">
-                    <h3>Dados Guardados de Forma Criptografada</h3>
-                    <p><span style="color:rgb(228, 228, 228);">Todo o conteúdo é protegido com criptografia para garantir sua
-                        privacidade e segurança, mesmo nos menores detalhes.</span></p>
-                </div>
-                <div class="feature-item">
-                    <h3>Acesse em Qualquer Dispositivo</h3>
-                    <p><span style="color:rgb(228, 228, 228);">Use seu bloco de notas pessoal onde quiser: celular,
-                        tablet ou computador. Tudo sincronizado com sua conta.</span></p>
-                </div>
-                <div class="feature-item">
-                    <h3>Organização Simples e Rápida</h3>
-                    <p><span style="color:rgb(228, 228, 228);">Crie, edite, exclua ou atualize suas notas com poucos cliques.
-                        Toda a interface foi pensada para não atrapalhar seu fluxo de escrita.</span></p>
-                </div>
-                <div class="feature-item">
-                    <h3>Anotações Sempre à Mão</h3>
-                    <p><span style="color:rgb(228, 228, 228);">Acesse e edite suas notas de forma rápida e prática.
-                        Ideal para registrar ideias no momento em que elas surgem.</span></p>
-                </div>
-            </div>
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
+          <h3 class="font-semibold mb-2">Criptografia de Dados</h3>
+          <p class="text-gray-600">Conteúdo protegido para garantir privacidade e segurança.</p>
         </div>
-
-        <div class="plans-section">
-            <h2>Nossos Planos</h2>
-            <div class="plans-container">
-              
-              <!-- Plano Gratuito -->
-              <div class="plan-card free">
-                <div class="plan-header">Básico</div>
-                <div class="plan-price">R$ 0 / mês</div>
-                <div class="plan-details">
-                  <p>✔ Até 100 arquivos de texto</p>
-                  <p>✔ Até 3000 caracteres por texto</p>
-                </div>
-                <button class="plan-btn active">Plano Atual</button>
-              </div>
-          
-              <!-- Plano Pro -->
-              <div class="plan-card pro">
-                <div class="plan-header">Pro</div>
-                <div class="plan-price">Disponível em breve!</div>
-                <div class="plan-details">
-                  <p></p>
-                  <p></p>
-                  <p></p>
-                  <p></p>
-                </div>
-                <!--<button class="plan-btn">Assinar</button>-->
-              </div>
-          
-            </div>
-          </div>
-
-
-        <div class="about-info">
-
-            <h3>Sobre o minimumpad</h3>
-
-            <div class="text">O minimumpad é um editor de textos online minimalista, projetado para oferecer uma
-                experiência de escrita
-                limpa, prática e sem distrações. Com foco na simplicidade e funcionalidade, ele permite que você crie,
-                edite
-                e organize suas anotações com facilidade, onde quer que esteja.
-
-                Seja para registrar ideias, manter um diário, anotar tarefas ou rascunhar projetos, o MinimumPad oferece
-                as
-                ferramentas essenciais para você se concentrar no que realmente importa: o conteúdo. Suas notas são
-                salvas
-                com segurança na nuvem, vinculadas à sua conta do Google, e acessíveis a qualquer momento, em qualquer
-                dispositivo.
-
-                Além disso, você pode manter notas privadas ou torná-las públicas com um link exclusivo — ideal para
-                compartilhar textos, listas ou conteúdos com outras pessoas.
-            
-                Com o minimumpad você pode armazenar até 100 textos, com até 3000 caracteres cada!
-                
-            </div>
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
+          <h3 class="font-semibold mb-2">Acesse em Qualquer Dispositivo</h3>
+          <p class="text-gray-600">Celular, tablet ou computador. Tudo sincronizado.</p>
         </div>
-
-        <div class="screenshots">
-
-            <h3>Dois Modos: Privado e Compartilhado</h3>
-
-            <div class="image-columns">
-                <div class="column">
-                    Salve textos privados com criptografia, protegidos por login. Ideal para rascunhos, ideias,
-                    lembretes ou qualquer conteúdo pessoal que você quer manter seguro e acessível apenas por
-                    você.<br><br>
-                    <img src="img/screen1.png" alt="private note">
-                </div>
-                <div class="column">
-                    Crie textos públicos para compartilhar com quem quiser. Ideal para listas,
-                    instruções ou qualquer conteúdo que precise ser acessado por outras pessoas.<br><br>
-                    <img src="img/screen2.png" alt="public note">
-                </div>
-            </div>
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
+          <h3 class="font-semibold mb-2">Organização Simples</h3>
+          <p class="text-gray-600">Crie, edite e exclua notas com poucos cliques.</p>
         </div>
-
-        <div class="feedback">
-
-            <h3>Envie seu Feedback</h3>
-
-            Tem alguma sugestão de melhoria, ou quer reportar algum problema? Manda aqui no <a href="mail:minimumlabss@gmail.com">minimumlabss@gmail.com</a>
-
-            <br><br><br>
-
-            </div>
+        <div class="bg-white p-6 rounded-lg shadow hover:shadow-md transition">
+          <h3 class="font-semibold mb-2">Anotações Sempre à Mão</h3>
+          <p class="text-gray-600">Registre ideias no momento em que elas surgem.</p>
         </div>
+      </div>
+    </section>
 
-    </main>
+    <!-- PLANOS -->
+    <section class="w-full">
+      <h2 class="text-3xl font-bold text-center mb-8">Nossos Planos</h2>
+      <div class="w-full flex flex-col md:flex-row justify-center gap-8">
+        <div class="flex-1 bg-white p-6 rounded-lg shadow text-center">
+          <h3 class="text-2xl font-semibold mb-4">Básico</h3>
+          <p class="text-4xl font-bold mb-4">R$ 0<span class="text-xl font-medium">/mês</span></p>
+          <ul class="space-y-2 mb-6 text-gray-600">
+            <li>✔ Até 100 arquivos de texto</li>
+            <li>✔ Até 3000 caracteres por texto</li>
+          </ul>
+          <button
+            onclick="window.location.href='http://localhost:8080/oauth2/authorization/google';"
+            class="bg-green-600 text-white px-5 py-2 rounded-lg">
+            Acesse Já!
+          </button>
+        </div>
+        <div class="flex-1 bg-gray-50 p-6 rounded-lg shadow text-center">
+          <h3 class="text-2xl font-semibold mb-4">Pro</h3>
+          <p class="text-xl font-medium mb-6">Disponível em breve!</p>
+          <ul class="space-y-2 mb-6 text-gray-400">
+            <li>– Recursos avançados</li>
+            <li>– Mais espaço de armazenamento</li>
+          </ul>
+          <button class="bg-gray-300 text-gray-700 px-5 py-2 rounded-lg cursor-not-allowed">Em breve</button>
+        </div>
+      </div>
+    </section>
 
+    <!-- SOBRE -->
+    <section class="w-full">
+      <h2 class="text-3xl font-bold text-center mb-6">Sobre o minimumpad</h2>
+      <p class="max-w-3xl mx-auto text-gray-700 leading-relaxed">
+        minimumpad é um editor de textos online minimalista, projetado para oferecer uma
+        experiência limpa e sem distrações. Salve suas notas com segurança na nuvem e
+        acesse-as de qualquer dispositivo. Crie, edite e organize suas ideias onde estiver.
+      </p>
+    </section>
 
-    <!-- Mapeamento de listeners para os botoes
-    
-    TODO: Revisar e usar esse processamento dentro do arquivo main.css
-    
-    -->
-    <script>
+    <!-- IMAGENS -->
+    <section class="w-full">
+      <h2 class="text-3xl font-bold text-center mb-8">Modos Privado e Compartilhado</h2>
+      <div class="w-full grid gap-8 md:grid-cols-2">
+        <div class="space-y-4 text-center">
+          <img src="img/screen1.png" alt="nota privada" class="mx-auto max-w-full rounded-lg shadow" />
+          <p class="text-gray-600">Salve textos privados com criptografia e acesso protegido.</p>
+        </div>
+        <div class="space-y-4 text-center">
+          <img src="img/screen2.png" alt="nota pública" class="mx-auto max-w-full rounded-lg shadow" />
+          <p class="text-gray-600">Compartilhe textos publicamente com um link único.</p>
+        </div>
+      </div>
+    </section>
 
-        document.getElementById('createNoteBtn').addEventListener('click', async () => {
-            const response = await fetch('http://localhost:8080/api/publicnotes', { method: 'POST' });
-            const { url } = await response.json();
-            window.location.href = `public-note.html?note=${url}`;
-        });
+    <!-- FEEDBACK -->
+    <section class="w-full text-center">
+      <h2 class="text-3xl font-bold mb-4">Envie seu Feedback</h2>
+      <p class="text-gray-700">
+        Tem sugestão ou encontrou um problema? Mande um e-mail para
+        <a href="mailto:minimumlabss@gmail.com" class="text-blue-600 underline">minimumlabss@gmail.com</a>.
+      </p>
+    </section>
 
+  </main>
 
-    </script>
-
-
+  <script src="js/index-dev.js"></script>
 </body>
 
 </html>
