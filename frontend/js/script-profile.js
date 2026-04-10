@@ -13,8 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const payload = JSON.parse(atob(token.split(".")[1]));
   const email = payload.sub;
 
-  // Local API Base URL (consistent with editor)
-  const API_BASE = "http://localhost:8080/api";
+  // Production API Base URL
+  const API_BASE = "https://minimumpad.com/tomcat/api";
   const userApiUrl = `${API_BASE}/users/email/${email}`;
   const notesApiUrl = `${API_BASE}/notes/email/${email}`;
   const userDelUrl = `${API_BASE}/users/me`;
@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (toggleSidebarBtn) toggleSidebarBtn.addEventListener("click", () => sidebar.classList.toggle("collapsed"));
   if (openSidebarBtn) openSidebarBtn.addEventListener("click", () => sidebar.classList.toggle("collapsed"));
   if (userIcon) userIcon.addEventListener("click", () => {
-      // Already on profile page, maybe just scroll to top
       window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 

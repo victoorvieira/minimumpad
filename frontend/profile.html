@@ -7,8 +7,8 @@
   <title>Minhas Informações – minimumpad</title>
   
   <!-- CSS Personalizado -->
-  <link rel="stylesheet" href="css/note-dev.css"> <!-- Reusing editor variables and base layout -->
-  <link rel="stylesheet" href="css/profile-dev.css">
+  <link rel="stylesheet" href="css/note.css"> <!-- Reusing editor variables -->
+  <link rel="stylesheet" href="css/profile.css">
 </head>
 <body>
   <div class="app-container">
@@ -17,7 +17,7 @@
     <aside id="sidebar">
       <div class="sidebar-content">
         <div class="sidebar-header">
-          <button id="backToNotesBtn" class="btn-primary" onclick="window.location.href='note-dev.html'">Voltar para Notas</button>
+          <button id="backToNotesBtn" class="btn-primary" onclick="window.location.href='note.html'">Voltar para Notas</button>
           <button id="toggleSidebarBtn" class="icon-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
           </button>
@@ -29,7 +29,6 @@
       </div>
 
       <div class="sidebar-actions">
-        <!-- Logout move to here in minimalist style if desired, or kept in cards -->
         <div class="user-menu-wrapper sidebar-user-box active">
           <button id="userIcon" class="user-profile-btn">
             <div class="user-avatar">
@@ -92,7 +91,7 @@
                 <button id="logoutBtnProfile" class="btn-outline full-width">Fazer Logout</button>
              </div>
 
-             <!-- Zona de Perigo (Minimizada) -->
+             <!-- Zona de Perigo -->
              <div class="danger-zone-wrapper">
                 <button type="button" class="danger-zone-toggle" onclick="this.parentElement.classList.toggle('open')">
                    <span>Configurações Avançadas</span>

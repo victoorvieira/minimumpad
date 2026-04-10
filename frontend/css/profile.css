@@ -1,124 +1,219 @@
-body {
-    background: #f0f0f0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 20px;
-  }
-  
-  .container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-  }
-  
-  .profile-card, .info-card {
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    padding: 20px;
-    color: #414040;
-    height: 400px;
-  }
-  
-  .profile-card {
-    flex: 1;
-    max-width: 580px;
-    text-align: center;
-  }
-  
-  .profile-img img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin-bottom: 15px;
-    border: 2px solid #acaeaf;
-  }
-  
-  .profile-card h2 {
-    margin: 10px 0 5px;
-    font-size: 22px;
-  }
-  
-  .profile-card .job-title {
-    color: #666;
-    font-size: 14px;
-  }
-  
-  .profile-card .location {
-    font-size: 13px;
-    color: #888;
-    margin-bottom: 20px;
-  }
-  
-  .delete-btn, .back-btn, .logoutBtnProfile {
-    display: block;
-    width: 100%;
-    margin: 8px 0;
-    padding: 10px;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-  }
-  
-  .logoutBtnProfile {
-    background: #4d4c4c;
-    color: white;
-  }
+/* Profile Container */
+.profile-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 3rem 1.5rem;
+  flex: 1;
+  overflow-y: auto;
+  background-color: var(--white);
+}
 
-  .delete-btn {
-    background: #e74c3c;
-    color: white;
-  }
-  
-  .back-btn {
-    background: #4d4c4c;
-    color: white;
-  }
-  
-  .info-card {
-    flex: 2;
-    height: 400px;
-  }
-  
-  .info-card h3 {
-    margin-bottom: 15px;
-    font-size: 18px;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 5px;
-  }
-  
-  .info-card ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .info-card li {
-    margin: 10px 0;
-    font-size: 15px;
-  }
-  
-  .info-card strong {
-    color: #333;
-  }
-  
-  .progress-container {
-    width: 100%;
-    background-color: #e0e0e0;
-    border-radius: 10px;
-    overflow: hidden;
-    height: 20px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-  }
-  
-  .progress-bar {
-    height: 100%;
-    width: 0%;
-    background-color: #4caf50;
-    text-align: center;
-    line-height: 20px;
-    color: white;
-    border-radius: 10px 0 0 10px;
-    transition: width 0.5s ease-in-out;
-  }
+.profile-card-minimal {
+  width: 100%;
+  max-width: 600px;
+  background-color: var(--white);
+  padding: 2rem;
+  /* subtle shadow or border */
+}
+
+.profile-header-info {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.profile-avatar-large {
+  width: 80px;
+  height: 80px;
+  background-color: #f3f4f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+}
+
+.profile-text-details h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 0.25rem;
+}
+
+.profile-text-details .text-muted {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.separator {
+  border: 0;
+  border-top: 1px solid var(--border-color);
+  margin: 2rem 0;
+}
+
+.profile-section {
+  margin-bottom: 2rem;
+}
+
+.section-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+}
+
+/* Usage Stats */
+.usage-stats .stat-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.progress-bar-container {
+  height: 8px;
+  background-color: #f3f4f6;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--green-main);
+  width: 0%;
+  transition: width 0.6s ease-out;
+}
+
+.stat-hint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Actions */
+.action-buttons-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.full-width {
+  width: 100%;
+  display: block;
+}
+
+@media (max-width: 480px) { ... }
+
+.btn-outline, .btn-danger-outline, .btn-primary-outline {
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+  text-align: center;
+}
+
+.btn-primary-outline {
+  border: 1px solid var(--green-main);
+  color: var(--green-main);
+}
+.btn-primary-outline:hover {
+  background-color: rgba(47, 79, 52, 0.05);
+}
+
+.btn-outline {
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+}
+.btn-outline:hover {
+  background-color: #f9fafb;
+}
+
+.btn-danger-outline {
+  border: 1px solid #fee2e2;
+  color: #dc2626;
+}
+.btn-danger-outline:hover {
+  background-color: #fef2f2;
+}
+
+/* Sidebar Specifics for Profile Page */
+.sidebar-info-text {
+  padding: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.profile-page-title {
+  margin-left: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* Danger Zone Toggle */
+.danger-zone-wrapper {
+  margin-top: 2rem;
+  border: 1px solid #f3f4f6;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.danger-zone-toggle {
+  width: 100%;
+  padding: 1rem;
+  background-color: #f9fafb;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.danger-zone-toggle:hover {
+  background-color: #f3f4f6;
+  color: var(--text-main);
+}
+
+.danger-zone-toggle svg {
+  transition: transform 0.3s;
+}
+
+.danger-zone-wrapper.open .danger-zone-toggle svg {
+  transform: rotate(180deg);
+}
+
+.danger-zone-content {
+  display: none;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-top: 1px solid #f3f4f6;
+}
+
+.danger-zone-wrapper.open .danger-zone-content {
+  display: block;
+}
+
+.danger-hint {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 1.25rem;
+  line-height: 1.5;
+}
+
+.action-buttons-single {
+  margin-top: 1.5rem;
+}
