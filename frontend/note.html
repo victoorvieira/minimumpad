@@ -5,198 +5,83 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="icon" href="img/icon-mnp.ico">
   <title>minimumpad – Editor de Textos online</title>
-
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <style>
-    /* Sidebar collapse */
-    #sidebar.collapsed {
-      width: 0 !important;
-      padding: 0 !important;
-      overflow: hidden !important;
-    }
-    #sidebar.collapsed + .main-content header #openSidebarBtn {
-      display: block !important;
-    }
-
-    /* Note‐list items */
-    .note-item {
-      padding: 0.5rem 1rem;
-      border-radius: 0.25rem;
-      cursor: pointer;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .note-item:hover {
-      background-color: #e6e6e6;
-    }
-    .note-item.active {
-      background-color: #4d614e;
-      color: #fff;
-      font-weight: bold;
-    }
-
-    /* Line‐numbers gutter – largura ajustada, sem scroll */
-    #lineNumbers {
-      width: 4ch;
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      overflow-y: hidden;
-      padding: 1rem 0.5rem;
-      background-color: #f9fafb;
-      color: #6b7280;
-      user-select: none;
-      text-align: right;
-    }
-
-    /* User‐menu */
-    #userMenu {
-      position: absolute;
-      top: calc(100% + 0.25rem);
-      right: 0;
-      background: #fff;
-      border-radius: 0.5rem;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      min-width: 12rem;
-      padding: 0.25rem 0;
-      display: none;
-      transform-origin: top right;
-      animation: fadeInScale 0.15s ease-out forwards;
-      z-index: 50;
-    }
-    #userMenu.visible {
-      display: block;
-    }
-    #userMenu button {
-      width: 100%;
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
-      color: #333;
-      text-align: left;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-    #userMenu button:hover {
-      background-color: #f4f4f5;
-    }
-    @keyframes fadeInScale {
-      from { opacity: 0; transform: scale(0.95) translateY(-5px); }
-      to   { opacity: 1; transform: scale(1)    translateY(0);    }
-    }
-
-    /* Mobile: fix body scroll, make textarea scrollable only */
-    @media (max-width: 768px) {
-      body {
-        overflow: hidden;
-      }
-      .main-content {
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-      }
-      .main-content header {
-        position: sticky;
-        top: 0;
-        z-index: 20;
-      }
-      .main-content main {
-        flex: 1;
-        display: flex;
-        overflow: hidden;
-      }
-      #lineNumbers {
-        height: 100%;
-      }
-      #noteContent {
-        height: 100%;
-        overflow-y: auto;
-      }
-    }
-  </style>
+  
+  <!-- CSS Personalizado -->
+  <link rel="stylesheet" href="css/note.css" />
 </head>
 
-<body class="flex h-screen bg-gray-50">
-  <div class="flex h-full w-full">
-
+<body>
+  <div class="app-container">
+    
     <!-- SIDEBAR -->
-    <aside
-      id="sidebar"
-      class="flex flex-col justify-between bg-gray-100 border-r border-gray-200
-             w-64 transition-all duration-300"
-    >
-      <div class="flex flex-col flex-1 overflow-y-auto">
-        <div class="flex items-center justify-between p-4">
-          <button id="newNoteBtn"
-                  class="flex-1 bg-green-700 text-white rounded px-3 py-2 mr-2
-                         hover:bg-green-800">
-            Nova Nota
+    <aside id="sidebar">
+      <div class="sidebar-content">
+        <div class="sidebar-header">
+          <button id="toggleSidebarBtn" class="icon-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
           </button>
-          <button id="toggleSidebarBtn"
-                  class="hidden md:block text-2xl p-2 hover:bg-gray-200 rounded">
-            ☰
+          <button id="sidebarAddNoteBtn" class="icon-btn" title="Nova Nota">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
           </button>
         </div>
-        <ul id="noteList" class="px-4 space-y-1">
+        <div class="sidebar-search">
+          <input type="text" id="searchInput" placeholder="Buscar notas..." />
+        </div>
+        <ul id="noteList">
           <li class="note-item text-gray-500">Nenhuma nota encontrada.</li>
         </ul>
       </div>
-      <div class="p-4 space-y-2">
-        <button id="saveNoteBtnDesktop"
-                class="w-full bg-green-600 text-white rounded px-4 py-2 hover:bg-green-700">
-          Salvar
-        </button>
-        <button id="deleteNoteBtnDesktop"
-                class="w-full bg-red-600 text-white rounded px-4 py-2 hover:bg-red-700">
-          Excluir
-        </button>
+      <div class="sidebar-actions">
+        <div class="user-menu-wrapper sidebar-user-box">
+          <button id="userIcon" class="user-profile-btn">
+            <div class="user-avatar">
+              <img src="img/user.svg" alt="User" />
+            </div>
+            <span>Minhas Informações</span>
+          </button>
+        </div>
       </div>
     </aside>
 
     <!-- MAIN CONTENT -->
-    <div class="main-content flex flex-col flex-1 w-full">
+    <div class="main-content">
+      
+      <input id="noteTitle" type="hidden" />
 
-      <!-- TOPBAR -->
-      <header
-        class="flex items-center bg-gray-100 border-b border-gray-200
-               px-4 py-1 h-10"
-      >
-        <button id="openSidebarBtn"
-                class="md:hidden text-2xl p-2 hover:bg-gray-200 rounded mr-2">
-          ☰
+      <!-- TAB BAR + TOGGLE -->
+      <div class="tab-header-wrapper">
+        <button id="openSidebarBtn" class="icon-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
-
-        <input id="noteTitle"
-               type="text"
-               placeholder="Sem Título"
-               maxlength="100"
-               class="bg-transparent text-xl font-bold text-gray-800
-                      focus:outline-none border-none w-64"/>
-
-        <div class="flex items-center ml-auto space-x-4 relative">
-          <button id="userIcon" class="p-1 hover:bg-gray-200 rounded">
-            <img src="img/user.svg" alt="Menu" class="w-6 h-6"/>
-          </button>
-          <div id="userMenu">
-            <button id="profileBtn">Minhas Informações</button>
-          </div>
-        </div>
-      </header>
+        <div id="tabBar" class="tab-bar"></div>
+        <button id="headerAddNoteBtn" class="icon-btn" title="Nova Nota">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        </button>
+      </div>
 
       <!-- EDITOR + LINE-NUMBERS -->
-      <main class="flex w-full overflow-hidden">
+      <main class="editor-container">
         <div id="lineNumbers"></div>
-        <textarea
-          id="noteContent"
-          placeholder="Escreva aqui..."
-          maxlength="5000"
-          class="flex-1 p-4 font-mono bg-white focus:outline-none resize-none overflow-y-auto"
-        ></textarea>
+        <textarea id="noteContent" placeholder="Escreva aqui..." maxlength="5000"></textarea>
       </main>
+
+      <!-- EMPTY STATE BACKGROUND -->
+      <div class="empty-state-overlay">
+        <div class="empty-content">
+          <img src="img/newfile.png" alt="Criar nova nota" class="empty-icon" />
+          <h2>Sua mesa está limpa</h2>
+          <p>Nenhuma nota aberta no momento. Que tal começar um novo pensamento ou organizar suas ideias?</p>
+          <button class="btn-empty-state" onclick="document.getElementById('headerAddNoteBtn').click()">Criar Nova Nota</button>
+        </div>
+      </div>
+
+      <!-- STATUS BAR -->
+      <footer class="editor-statusbar">
+         <span id="statusLines">0 linhas</span>
+         <span id="statusChars">0 caracteres</span>
+         <span id="statusSelection"></span>
+      </footer>
+
     </div>
   </div>
 

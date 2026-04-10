@@ -1,19 +1,22 @@
 document.addEventListener("DOMContentLoaded", () => {
   const noteTitle            = document.getElementById("noteTitle");
   const noteContent          = document.getElementById("noteContent");
-  const newNoteBtn           = document.getElementById("newNoteBtn");
-  const saveNoteBtnDesktop   = document.getElementById("saveNoteBtnDesktop");
-  const deleteNoteBtnDesktop = document.getElementById("deleteNoteBtnDesktop");
+  const headerAddNoteBtn     = document.getElementById("headerAddNoteBtn");
+  const sidebarAddNoteBtn    = document.getElementById("sidebarAddNoteBtn");
   const noteList             = document.getElementById("noteList");
   const sidebar              = document.getElementById("sidebar");
   const toggleSidebarBtn     = document.getElementById("toggleSidebarBtn");
   const openSidebarBtn       = document.getElementById("openSidebarBtn");
   const userIcon             = document.getElementById("userIcon");
-  const userMenu             = document.getElementById("userMenu");
-  const profileBtn           = document.getElementById("profileBtn");
   const lineNumbers          = document.getElementById("lineNumbers");
+  const tabBar               = document.getElementById("tabBar");
 
-  let currentNoteId   = null;
+  const statusLines          = document.getElementById("statusLines");
+  const statusChars          = document.getElementById("statusChars");
+  const statusSelection      = document.getElementById("statusSelection");
+
+  let openTabs        = []; // Array de { id, title, content }
+  let activeNoteId    = null; // ID da nota ativa (ou null para nova nota sem ID)
   let autosaveTimeout = null;
   let totalNotes      = 0;
 
@@ -48,22 +51,28 @@ document.addEventListener("DOMContentLoaded", () => {
   toggleSidebarBtn.addEventListener("click", () => sidebar.classList.toggle("collapsed"));
   openSidebarBtn.addEventListener("click", () => sidebar.classList.toggle("collapsed"));
 
-  // User‐menu open/close
-  userIcon.addEventListener("click", e => {
-    e.stopPropagation();
-    userMenu.classList.toggle("visible");
-  });
-  document.addEventListener("click", e => {
-    if (!userMenu.contains(e.target) && !userIcon.contains(e.target)) {
-      userMenu.classList.remove("visible");
-    }
-  });
-  profileBtn.addEventListener("click", () => window.location.href = "profile.html");
+  // User profile redirect
+  userIcon.addEventListener("click", () => window.location.href = "profile.html");
 
   // CRUD bindings
-  newNoteBtn.addEventListener("click", createNewNote);
-  saveNoteBtnDesktop.addEventListener("click", saveNote);
-  deleteNoteBtnDesktop.addEventListener("click", deleteNote);
+  headerAddNoteBtn.addEventListener("click", createNewNote);
+  if (sidebarAddNoteBtn) sidebarAddNoteBtn.addEventListener("click", createNewNote);
+
+  // Search Notes
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      const term = e.target.value.toLowerCase();
+      document.querySelectorAll(".note-item").forEach(item => {
+        if(item.classList.contains("text-gray-500")) return; // ignore 'No notes found'
+        const titleSpan = item.querySelector(".note-item-title");
+        if (titleSpan) {
+          const text = titleSpan.textContent.toLowerCase();
+          item.style.display = text.includes(term) ? "flex" : "none";
+        }
+      });
+    });
+  }
 
   // Title limit + autosave
   noteTitle.addEventListener("input", () => {
@@ -82,7 +91,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     triggerAutosave();
     updateLineNumbers();
+    updateStatusBar();
   });
+
+  // Track selection state naturally on cursor operations
+  noteContent.addEventListener("keyup", updateStatusBar);
+  noteContent.addEventListener("mouseup", updateStatusBar);
 
   // Sync scroll
   noteContent.addEventListener("scroll", () => {
@@ -120,7 +134,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!notes.length) {
           noteList.innerHTML =
             '<li class="note-item text-gray-500">Nenhuma nota encontrada.</li>';
-          createNewNote();
+          if (openTabs.length === 0) {
+            activeNoteId = null;
+            noteTitle.value = "";
+            noteContent.value = "";
+            renderTabs();
+            updateStatusBar();
+            updateLineNumbers();
+          }
           return;
         }
 
@@ -129,36 +150,328 @@ document.addEventListener("DOMContentLoaded", () => {
           .forEach(note => {
             const li = document.createElement("li");
             li.className   = "note-item";
-            li.textContent = note.title;
-            li.title       = note.title;
             li.dataset.id  = note.id;
-            if (note.id === currentNoteId) li.classList.add("active");
+            if (note.id === activeNoteId) li.classList.add("active");
+
+            const titleSpan = document.createElement("span");
+            titleSpan.className = "note-item-title";
+            titleSpan.textContent = note.title;
+            titleSpan.title = note.title;
+            
+            const actionContainer = document.createElement("div");
+            actionContainer.style.display = "flex";
+            actionContainer.style.gap = "0.5rem";
+
+            const editBtn = document.createElement("button");
+            editBtn.className = "edit-icon";
+            editBtn.innerHTML = "&#9998;"; // Pencil icon
+            editBtn.title = "Renomear Nota";
+            editBtn.addEventListener("click", (e) => {
+              e.stopPropagation();
+              
+              const input = document.createElement("input");
+              input.className = "note-edit-input";
+              input.value = note.title;
+              li.replaceChild(input, titleSpan);
+              input.focus();
+              input.select();
+
+              let finishing = false;
+              const restore = (finalTitle) => {
+                if (finishing) return;
+                finishing = true;
+                if (input.parentNode === li) {
+                  titleSpan.textContent = finalTitle || "Sem Título";
+                  titleSpan.title = finalTitle || "Sem Título";
+                  li.replaceChild(titleSpan, input);
+                }
+              };
+
+              const handleFinish = () => {
+                if (finishing) return;
+                const val = input.value.trim();
+                if (val && val !== note.title) {
+                  performRename(note, val, restore);
+                } else {
+                  restore(note.title);
+                }
+              };
+
+              input.addEventListener("keydown", (ev) => {
+                if (ev.key === "Enter") {
+                  ev.preventDefault();
+                  handleFinish();
+                }
+                if (ev.key === "Escape") {
+                  restore(note.title);
+                }
+              });
+
+              input.addEventListener("blur", handleFinish);
+            });
+
+            const downloadBtn = document.createElement("button");
+            downloadBtn.className = "download-icon";
+            downloadBtn.innerHTML = "&#x2913;"; // Download icon
+            downloadBtn.title = "Baixar Nota (.txt)";
+            downloadBtn.addEventListener("click", (e) => {
+              e.stopPropagation();
+              const blob = new Blob([note.content], { type: 'text/plain' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `${note.title || 'nota'}.txt`;
+              a.click();
+              URL.revokeObjectURL(url);
+            });
+
+            const delBtn = document.createElement("button");
+            delBtn.className = "delete-icon";
+            delBtn.innerHTML = "&times;";
+            delBtn.title = "Excluir Nota";
+            delBtn.addEventListener("click", (e) => {
+              e.stopPropagation();
+              if(confirm("Deseja realmente excluir esta nota?")) {
+                deleteNoteById(note.id);
+              }
+            });
+
+            actionContainer.appendChild(editBtn);
+            actionContainer.appendChild(downloadBtn);
+            actionContainer.appendChild(delBtn);
+
+            li.appendChild(titleSpan);
+            li.appendChild(actionContainer);
 
             li.addEventListener("click", () => {
-              currentNoteId     = note.id;
-              noteTitle.value   = note.title;
-              noteContent.value = note.content;
-              updateSelectedNoteUI();
-              updateLineNumbers();
+              openNoteInTab(note);
             });
 
             noteList.appendChild(li);
           });
 
-        if (!currentNoteId) createNewNote();
+        if (openTabs.length === 0) {
+          activeNoteId = null;
+          noteTitle.value = "";
+          noteContent.value = "";
+          renderTabs();
+          updateStatusBar();
+          updateLineNumbers();
+        }
       })
       .catch(err => {
         console.error(err);
         noteList.innerHTML =
           '<li class="note-item text-gray-500">Nenhuma nota encontrada.</li>';
-        createNewNote();
+        if (openTabs.length === 0) {
+          activeNoteId = null;
+          noteTitle.value = "";
+          noteContent.value = "";
+          renderTabs();
+          updateStatusBar();
+          updateLineNumbers();
+        }
       });
+  }
+
+  function performRename(note, newName, callback) {
+      if (!newName || newName.trim() === "") return;
+      const trimmedName = newName.trim();
+      
+      // Update local note object immediately
+      note.title = trimmedName;
+      
+      // Update corresponding tab if open
+      const tab = openTabs.find(t => t.id === note.id);
+      if (tab) {
+          tab.title = trimmedName;
+          if (activeNoteId === tab.id) {
+              // noteTitle is the hidden input used for saving
+              if (noteTitle) noteTitle.value = trimmedName;
+          }
+      }
+      
+      // Update sidebar title immediately before server response for zero-latency feel
+      if (callback) callback(trimmedName);
+      
+      // If it's a temp note, just save locally and update UI
+      if (note.isTemp || !note.id) {
+          renderTabs();
+          loadNotes(); // To refresh sidebar list
+          return;
+      }
+
+      // If it's a saved note, update on server
+      fetch(`http://localhost:8080/api/notes/${note.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${jwt}`
+        },
+        body: JSON.stringify({ title: trimmedName, content: note.content })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Erro ao renomear nota");
+        return res.json();
+      })
+      .then(() => {
+        renderTabs();
+        loadNotes(); // To refresh sidebar list order/state
+        showGreenBox("Nota renomeada com sucesso!");
+      })
+      .catch(err => {
+        console.error(err);
+        showRedBox("Falha ao renomear nota.");
+        // We don't necessarily revert here to avoid jarring UI, 
+        // but loadNotes will eventually sync correctly with server state.
+      });
+  }
+
+  function renameNote(note) {
+    // This is still used by the tab double-click
+    const newName = prompt("Digite o novo título da nota:", note.title);
+    if (newName !== null && newName.trim() !== "") {
+       performRename(note, newName.trim());
+    }
   }
 
   function updateSelectedNoteUI() {
     document.querySelectorAll(".note-item").forEach(item => {
-      item.classList.toggle("active", item.dataset.id == currentNoteId);
+      item.classList.toggle("active", item.dataset.id == activeNoteId);
     });
+    // Manually update tab active state without re-rendering all tabs
+    document.querySelectorAll(".tab").forEach((tabEl, index) => {
+       const tabObj = openTabs[index];
+       if (tabObj) {
+         tabEl.classList.toggle("active", tabObj.id == activeNoteId);
+       }
+    });
+  }
+
+  function openNoteInTab(note) {
+    const existingTab = openTabs.find(t => t.id === note.id);
+    if (existingTab) {
+      switchTab(note.id);
+    } else {
+      openTabs.push({ ...note });
+      renderTabs(); // Render because a new tab was added
+      switchTab(note.id);
+    }
+    // Mobile: auto-close sidebar
+    if (window.innerWidth <= 768 && sidebar) {
+      sidebar.classList.add("collapsed");
+    }
+  }
+
+  function renderTabs() {
+    if (!tabBar) return;
+    tabBar.innerHTML = "";
+    
+    // Toggle class for empty state
+    const mainContent = document.querySelector(".main-content");
+    if (mainContent) {
+      mainContent.classList.toggle("is-empty", openTabs.length === 0);
+    }
+
+    openTabs.forEach(tab => {
+      const tabEl = document.createElement("div");
+      tabEl.className = "tab";
+      if (tab.id === activeNoteId) tabEl.classList.add("active");
+      
+      const titleSpan = document.createElement("span");
+      titleSpan.className = "tab-title";
+      titleSpan.textContent = tab.title || "Sem Título";
+      
+      const closeBtn = document.createElement("span");
+      closeBtn.className = "tab-close";
+      closeBtn.innerHTML = "&times;";
+      closeBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        closeTab(tab.id, e);
+      });
+
+      tabEl.appendChild(titleSpan);
+      tabEl.appendChild(closeBtn);
+      
+      tabEl.addEventListener("click", () => switchTab(tab.id));
+      tabEl.addEventListener("dblclick", (e) => {
+        e.stopPropagation();
+        
+        const input = document.createElement("input");
+        input.className = "tab-edit-input";
+        input.value = tab.title || "Sem Título";
+        tabEl.replaceChild(input, titleSpan);
+        input.focus();
+        input.select();
+
+        let finishing = false;
+        const restore = (finalTitle) => {
+          if (finishing) return;
+          finishing = true;
+          if (input.parentNode === tabEl) {
+            titleSpan.textContent = finalTitle || "Sem Título";
+            tabEl.replaceChild(titleSpan, input);
+          }
+        };
+
+        const finish = () => {
+          if (finishing) return;
+          const val = input.value.trim();
+          if (val && val !== tab.title) {
+            performRename(tab, val, restore);
+          } else {
+            restore(tab.title);
+          }
+        };
+
+        input.addEventListener("keydown", (ev) => {
+          if (ev.key === "Enter") {
+             ev.preventDefault();
+             finish();
+          }
+          if (ev.key === "Escape") restore(tab.title);
+        });
+
+        input.addEventListener("blur", finish);
+      });
+      tabBar.appendChild(tabEl);
+    });
+  }
+
+  function switchTab(noteId) {
+    activeNoteId = noteId;
+    const tab = openTabs.find(t => t.id === noteId);
+    if (tab) {
+      noteTitle.value = tab.title || "";
+      noteContent.value = tab.content || "";
+      updateSelectedNoteUI();
+      updateLineNumbers();
+      updateStatusBar();
+    }
+  }
+
+  function closeTab(noteId, event) {
+    const tabIndex = openTabs.findIndex(t => t.id === noteId);
+    if (tabIndex === -1) return;
+
+    openTabs.splice(tabIndex, 1);
+    
+    if (activeNoteId === noteId) {
+      if (openTabs.length > 0) {
+        const nextTab = openTabs[tabIndex] || openTabs[tabIndex - 1];
+        switchTab(nextTab.id);
+      } else {
+        // No tabs left: Show empty state instead of creating a new note
+        activeNoteId = null;
+        noteTitle.value = "";
+        noteContent.value = "";
+        updateSelectedNoteUI();
+        updateStatusBar();
+        updateLineNumbers();
+      }
+    }
+    // Always render tabs after closing one to reflect changes immediately
+    renderTabs();
   }
 
   function createNewNote() {
@@ -166,11 +479,17 @@ document.addEventListener("DOMContentLoaded", () => {
       showRedBox("Você atingiu o limite de 100 notas.");
       return;
     }
-    currentNoteId     = null;
-    noteTitle.value   = "";
-    noteContent.value = "";
-    updateSelectedNoteUI();
-    updateLineNumbers();
+    
+    const newNoteTemplate = {
+      id: "temp-" + Date.now(),
+      title: "",
+      content: "",
+      isTemp: true
+    };
+    
+    openTabs.push(newNoteTemplate);
+    renderTabs();
+    switchTab(newNoteTemplate.id);
   }
 
   function saveNote() {
@@ -186,10 +505,13 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const isNew  = !currentNoteId;
-    const url    = isNew
+    const currentTab = openTabs.find(t => t.id === activeNoteId);
+    if (!currentTab) return;
+
+    const isNew = currentTab.isTemp;
+    const url = isNew
       ? "http://localhost:8080/api/notes"
-      : `http://localhost:8080/api/notes/${currentNoteId}`;
+      : `http://localhost:8080/api/notes/${activeNoteId}`;
     const method = isNew ? "POST" : "PUT";
 
     fetch(url, {
@@ -212,9 +534,17 @@ document.addEventListener("DOMContentLoaded", () => {
         return res.json();
       })
       .then(data => {
-        if (isNew && data.id) currentNoteId = data.id;
+        if (isNew && data.id) {
+          currentTab.id = data.id;
+          currentTab.isTemp = false;
+          activeNoteId = data.id;
+        }
+        currentTab.title = title;
+        currentTab.content = content;
+        
         showGreenBox("Texto salvo com sucesso!");
         loadNotes();
+        renderTabs();
       })
       .catch(err => {
         console.error(err);
@@ -223,11 +553,23 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function deleteNote() {
-    if (!currentNoteId) {
+    if (!activeNoteId) {
       showRedBox("Selecione uma nota para excluir.");
       return;
     }
-    fetch(`http://localhost:8080/api/notes/${currentNoteId}`, {
+    const currentTab = openTabs.find(t => t.id === activeNoteId);
+    if (currentTab && currentTab.isTemp) {
+        closeTab(activeNoteId);
+        return;
+    }
+    if (confirm("Deseja realmente excluir a nota atual?")) {
+      deleteNoteById(activeNoteId);
+    }
+  }
+
+  function deleteNoteById(id) {
+    if (!id) return;
+    fetch(`http://localhost:8080/api/notes/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${jwt}` }
     })
@@ -236,8 +578,8 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .then(() => {
         showGreenBox("Nota excluída com sucesso!");
+        closeTab(id);
         loadNotes();
-        createNewNote();
       })
       .catch(err => {
         console.error(err);
@@ -248,7 +590,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function triggerAutosave() {
     clearTimeout(autosaveTimeout);
     autosaveTimeout = setTimeout(() => {
-      if (noteTitle.value || noteContent.value || currentNoteId) {
+      if (noteTitle.value || noteContent.value) {
         saveNote();
       }
     }, 2000);
@@ -267,6 +609,31 @@ document.addEventListener("DOMContentLoaded", () => {
       const span = document.createElement("span");
       span.textContent = i;
       lineNumbers.appendChild(span);
+    }
+  }
+
+  function updateStatusBar() {
+    const text = noteContent.value;
+    const chars = text.length;
+    const lines = text.length === 0 ? 0 : text.split('\n').length;
+    
+    // Selection state bindings
+    const start = noteContent.selectionStart || 0;
+    const end = noteContent.selectionEnd || 0;
+    const selectedLen = end - start;
+    
+    if (statusLines) statusLines.textContent = `${lines} ${lines === 1 ? 'linha' : 'linhas'}`;
+    if (statusChars) {
+      statusChars.textContent = `${chars} / 5000 ${chars === 1 ? 'caractere' : 'caracteres'}`;
+      statusChars.classList.toggle("status-warning", chars >= 5000);
+    }
+    
+    if (statusSelection) {
+      if (selectedLen > 0) {
+        statusSelection.textContent = `(${selectedLen} ${selectedLen === 1 ? 'selecionado' : 'selecionados'})`;
+      } else {
+        statusSelection.textContent = "";
+      }
     }
   }
 
@@ -299,16 +666,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function showGreenBox(msg) {
     const box = document.createElement("div");
-    box.textContent = msg;
-    box.classList.add(
-      "fixed", "top-4", "right-4",
-      "bg-green-600", "text-white",
-      "px-4", "py-2",
-      "rounded", "shadow-lg",
-      "z-50"
-    );
+    box.title = msg;
+    box.classList.add("save-success-circle");
     document.body.appendChild(box);
-    setTimeout(() => box.remove(), 3000);
+    setTimeout(() => box.remove(), 2000);
   }
 
   function showRedBox(msg) {
