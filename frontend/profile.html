@@ -1,51 +1,116 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/x-icon" href="img/icon-mnp.ico">
-  <title>Minhas Informações</title>
-  <link rel="stylesheet" href="css/profile.css">
+  <title>Minhas Informações – minimumpad</title>
+  
+  <!-- CSS Personalizado -->
+  <link rel="stylesheet" href="css/note-dev.css"> <!-- Reusing editor variables and base layout -->
+  <link rel="stylesheet" href="css/profile-dev.css">
 </head>
 <body>
-  <div class="container">
-    <!-- Card esquerdo -->
-    <div class="profile-card">
-      <!-- <div class="profile-img">-->
-        <div class="profile-img">
-          <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#969393" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="8" r="4"></circle>
-            <path d="M6 20c0-4 4-6 6-6s6 2 6 6"></path>
-          </svg>
+  <div class="app-container">
+    
+    <!-- SIDEBAR (Consistência com editor) -->
+    <aside id="sidebar">
+      <div class="sidebar-content">
+        <div class="sidebar-header">
+          <button id="backToNotesBtn" class="btn-primary" onclick="window.location.href='note-dev.html'">Voltar para Notas</button>
+          <button id="toggleSidebarBtn" class="icon-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
         </div>
-        <!-- <img src="img/user.svg" alt="User Avatar" id="user-avatar">-->
-      <!--</div>-->
-      <h2 id="user-name">Carregando...</h2>
-      <!--<p class="job-title">User</p>-->
-      <p class="location">-</p>
-      <button class="back-btn" onclick="window.location.href='note.html'">Voltar para o Bloco de Notas</button>
-      <button id="logoutBtnProfile" class="logoutBtnProfile">Sair</button>
-      <button class="delete-btn" id="delete-account">Excluir minha Conta</button>
-    </div>
+        
+        <div class="sidebar-info-text">
+          <p>Gerencie sua conta e visualize suas estatísticas de uso.</p>
+        </div>
+      </div>
 
-    <!-- Card direito -->
-    <div class="info-card">
-      <h3>Minhas Informações</h3>
-      <!--<ul>
-       <li><strong>Nome:</strong> <span id="full-name">Carregando...</span></li>
-        <li><strong>E-mail:</strong> <span id="email">Carregando...</span></li>
-        <li><strong>Quantidade atual de notas:</strong> <span id="notes-count">Carregando...</span></li>
-      </ul>-->
-      
-        <strong>Quantidade atual de notas:</strong>
-        <div class="progress-container">
-          <div class="progress-bar" id="notes-progress"></div>
+      <div class="sidebar-actions">
+        <!-- Logout move to here in minimalist style if desired, or kept in cards -->
+        <div class="user-menu-wrapper sidebar-user-box active">
+          <button id="userIcon" class="user-profile-btn">
+            <div class="user-avatar">
+              <img src="img/user.svg" alt="User" />
+            </div>
+            <span>Minhas Informações</span>
+          </button>
         </div>
-        <span id="notes-count">Carregando...</span>/100
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
       
+      <!-- TOPBAR SIMULATOR (Compact) -->
+      <header class="tab-header-wrapper">
+        <button id="openSidebarBtn" class="icon-btn">☰</button>
+        <div class="profile-page-title">Configurações da Conta</div>
+      </header>
+
+      <main class="profile-container">
+        <div class="profile-card-minimal">
+          
+          <div class="profile-header-info">
+             <div class="profile-avatar-large">
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="4"></circle>
+                  <path d="M6 20c0-4 4-6 6-6s6 2 6 6"></path>
+                </svg>
+             </div>
+             <div class="profile-text-details">
+                <h1 id="user-name">Carregando...</h1>
+                <p id="email" class="text-muted">E-mail não disponível</p>
+             </div>
+          </div>
+
+          <hr class="separator" />
+
+          <section class="profile-section">
+            <div class="section-label">Estatísticas de Uso</div>
+            <div class="usage-stats">
+               <div class="stat-info">
+                  <span>Notas Criadas</span>
+                  <span class="stat-value"><span id="notes-count">0</span> / 100</span>
+               </div>
+               <div class="progress-bar-container">
+                  <div id="notes-progress" class="progress-bar-fill"></div>
+               </div>
+               <p class="stat-hint">Você pode criar até 100 notas no plano gratuito.</p>
+            </div>
+          </section>
+
+          <hr class="separator" />
+
+          <section class="profile-section actions">
+             <div class="section-label">Ações da Conta</div>
+             <button id="downloadAllNotesBtn" class="btn-primary-outline full-width">Baixar todas as notas (.zip)</button>
+             
+             <div class="action-buttons-single">
+                <button id="logoutBtnProfile" class="btn-outline full-width">Fazer Logout</button>
+             </div>
+
+             <!-- Zona de Perigo (Minimizada) -->
+             <div class="danger-zone-wrapper">
+                <button type="button" class="danger-zone-toggle" onclick="this.parentElement.classList.toggle('open')">
+                   <span>Configurações Avançadas</span>
+                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <div class="danger-zone-content">
+                   <p class="danger-hint">A exclusão da conta é permanente e removerá todos os seus textos salvos.</p>
+                   <button id="delete-account" class="btn-danger-outline full-width">Excluir minha Conta Permanentemente</button>
+                </div>
+             </div>
+          </section>
+
+        </div>
+      </main>
     </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="js/script-profile.js"></script>
 </body>
 </html>
