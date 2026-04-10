@@ -1,4 +1,4 @@
-// Funcao utilizada para atualizar o numero das linhas na caixa de texto
+revise // Funcao utilizada para atualizar o numero das linhas na caixa de texto
 function updateLineNumbers() {
   const lines = textarea.value.split('\n').length;
   lineNumbers.innerHTML = '';
@@ -74,26 +74,26 @@ async function updateNote() {
 // funcao para mostrar a caixa de sucesso
 // TODO: juntar com a showRedBox()
 function showGreenBox(message) {
-        let box = document.createElement("div");
-        box.textContent = message;
-        box.classList.add("green-box");
+  let box = document.createElement("div");
+  box.textContent = message;
+  box.classList.add("green-box");
 
-        document.body.appendChild(box);
+  document.body.appendChild(box);
 
-        setTimeout(() => {
-            box.remove();
-        }, 3000); // Remove a caixa após 3 segundos
+  setTimeout(() => {
+    box.remove();
+  }, 3000); // Remove a caixa após 3 segundos
 }
 
 // exibe uma caixa vermelha com a mensage de erro
 function showRedBox(message) {
-        let box = document.createElement("div");
-        box.textContent = message;
-        box.classList.add("red-box");
+  let box = document.createElement("div");
+  box.textContent = message;
+  box.classList.add("red-box");
 
-        document.body.appendChild(box);
+  document.body.appendChild(box);
 
-        setTimeout(() => {
-            box.remove();
-        }, 3000); // Remove a caixa após 3 segundos
+  setTimeout(() => {
+    box.remove();
+  }, 3000); // Remove a caixa após 3 segundos
 }
