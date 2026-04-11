@@ -153,6 +153,7 @@ body {
 }
 
 .hero-title {
+    font-family: Arial, sans-serif;
     font-size: 4rem;
     font-weight: 800;
     color: #444;
@@ -178,17 +179,21 @@ body {
 /* Image Example Section */
 .hero-screenshot-container {
     margin: 3rem auto;
-    width: 100%;
-    max-width: 1200px; /* Expansão adicional para ocupar mais espaço lateral */
-    padding: 0 1rem; /* Margem de segurança para mobile */
+    width: 95%;
+    max-width: 1290px;
+    padding: 0;
+    position: relative;
 }
 
 .hero-screenshot {
     width: 100%;
     height: auto;
-    border-radius: 12px;
-    border: 1px solid #eee;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.10), 0 6px 16px rgba(0,0,0,0.05);
+    display: block;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
 }
 
 .usage-limits {
@@ -216,12 +221,86 @@ body {
     margin-bottom: 2rem;
 }
 
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
+/* Floating Presentation */
+.floating-presentation {
+    margin: 4rem auto;
+    padding: 3rem 2rem;
+    max-width: 900px;
+    text-align: center;
+    position: relative;
+    background: radial-gradient(circle at center, rgba(240, 253, 244, 0.5) 0%, transparent 70%);
+}
+
+.floating-presentation p {
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: #2f4f34;
+    font-style: italic;
+    line-height: 1.4;
+    animation: float 4s ease-in-out infinite;
+    text-shadow: 0 10px 20px rgba(0,0,0,0.05);
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Feature Rows */
+.features-section {
+    margin-top: 6rem;
     width: 100%;
-    max-width: 1200px;
+}
+
+.features-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8rem;
+}
+
+.feature-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+}
+
+.feature-row-reverse {
+    flex-direction: row-reverse;
+}
+
+.feature-info {
+    flex: 1;
+    text-align: left;
+}
+
+.feature-info h2 {
+    font-size: 2.2rem;
+    color: #2f4f34;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.feature-info p {
+    font-size: 1.15rem;
+    color: #475569;
+    line-height: 1.8;
+}
+
+.feature-card {
+    flex: 1;
+    background: #ffffff;
+    border: 1px solid #f1f1f1;
+    border-radius: 24px;
+    padding: 3rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .feature-card {
@@ -275,13 +354,20 @@ body {
 /* Scroll Reveal Animation */
 .reveal {
     opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.6s ease-out;
+    transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-left {
+    transform: translateX(-50px);
+}
+
+.reveal-right {
+    transform: translateX(50px);
 }
 
 .reveal.active {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate(0);
 }
 
 /* Footer / Extra info */
@@ -428,83 +514,225 @@ body {
     transform: translateY(-5px);
 }
 
-/* Responsive adjustments */
+/* =========================================
+   RESPONSIVE — TABLET (max-width: 768px)
+   ========================================= */
 @media (max-width: 768px) {
-    .top-nav {
-        display: none; /* Hide top nav on mobile */
+
+    /* Header */
+    .site-header {
+        padding: 0 1.25rem;
+        height: 48px;
     }
 
-    .hero-cta-container {
-        display: flex;
-        margin-top: 1rem;
+    .header-announcement {
+        display: none;
     }
 
+    .header-left {
+        display: none;
+    }
+
+    .header-nav {
+        justify-content: flex-end;
+    }
+
+    /* Hero */
     .hero-section {
-        padding: 3rem 1.5rem;
+        padding: 5rem 1.25rem 2rem;
         min-height: auto;
+        text-align: center;
+        align-items: center;
     }
 
     .hero-title {
-        font-size: 2.75rem;
-        line-height: 1.1;
+        font-size: 2.6rem;
+        line-height: 1.15;
     }
 
     .hero-subtitle {
-        font-size: 1.1rem;
-        margin-bottom: 2rem;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
     }
 
+    /* Screenshot */
+    .hero-screenshot-container {
+        width: 100%;
+        max-width: 100%;
+        padding: 0 1rem;
+        margin: 1.5rem auto;
+    }
+
+    .hero-screenshot {
+        border-radius: 10px;
+    }
+
+    /* Floating presentation */
+    .floating-presentation {
+        padding: 1.5rem 1rem;
+        margin: 1.5rem auto;
+    }
+
+    .floating-presentation p:first-child {
+        font-size: 1.3rem;
+    }
+
+    .floating-presentation p {
+        font-size: 0.95rem;
+    }
+
+    /* Features */
     .features-section {
-        margin-top: 4rem;
+        margin-top: 3rem;
         padding: 0 1rem;
     }
 
-    .features-grid {
-        grid-template-columns: 1fr;
+    .features-container {
+        gap: 3.5rem;
+        padding: 0;
+    }
+
+    .feature-row,
+    .feature-row-reverse {
+        flex-direction: column !important;
         gap: 1.5rem;
+        text-align: center;
+    }
+
+    .feature-info {
+        text-align: center;
+        order: 1;
     }
 
     .feature-card {
-        padding: 2rem 1.5rem;
-        text-align: center; /* Centered texts as requested */
-        .desktop-only {
-        display: none !important;
+        order: 2;
+        width: 100%;
+        padding: 1.75rem 1.25rem;
+        align-items: center;
+        text-align: center;
     }
-}
+
+    .feature-info h2 {
+        font-size: 1.6rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .feature-info p {
+        font-size: 1rem;
+    }
 
     .icon-box {
-        margin: 0 auto 1.5rem auto; /* Center icons */
+        margin: 0 auto 1.25rem auto;
+    }
+
+    /* Pricing */
+    .pricing-container {
+        margin-top: 3rem;
+        padding: 0 1rem;
+        flex-direction: column;
+        align-items: center;
     }
 
     .plan-card {
-        padding: 2rem 1.5rem;
-    }
-
-    .plan-features li {
-        justify-content: center; /* Center feature list items */
-        text-align: left; /* Keep text left-aligned inside centered flex */
-    }
-
-    .final-cta {
-        margin-top: 4rem;
-    }
-}
-
-/* Specific fixes for very small screens */
-@media (max-width: 480px) {
-    .top-nav {
-        display: none;
-    }
-    
-    .hero-title {
-        font-size: 2.25rem;
-    }
-    
-    .pricing-container {
-        padding: 0 1rem;
+        padding: 1.75rem 1.25rem;
+        width: 100%;
+        max-width: 100%;
     }
 
     .plan-price {
         font-size: 2.5rem;
+    }
+
+    .plan-features li {
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+    /* Final CTA */
+    .final-cta {
+        margin-top: 3rem;
+        padding: 0 1rem 2rem;
+    }
+
+    .final-cta h3 {
+        font-size: 1.3rem;
+    }
+
+    .login-btn {
+        padding: 0.85rem 2rem;
+        font-size: 1rem;
+        width: 100%;
+        max-width: 320px;
+    }
+
+    /* Footer */
+    .trust-banner {
+        padding: 1.5rem 1.25rem;
+        margin-top: 3rem;
+    }
+
+    .trust-banner p {
+        font-size: 0.85rem;
+    }
+
+    /* Back to Top */
+    .back-to-top {
+        bottom: 1.25rem;
+        right: 1.25rem;
+    }
+}
+
+/* =========================================
+   RESPONSIVE — PHONE (max-width: 480px)
+   ========================================= */
+@media (max-width: 480px) {
+
+    .hero-title {
+        font-size: 2.1rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.95rem;
+    }
+
+    .floating-presentation p:first-child {
+        font-size: 1.15rem;
+    }
+
+    .floating-presentation p {
+        font-size: 0.9rem;
+    }
+
+    .feature-info h2 {
+        font-size: 1.4rem;
+    }
+
+    .feature-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .feature-card p {
+        font-size: 0.9rem;
+    }
+
+    .pricing-container {
+        padding: 0 0.75rem;
+    }
+
+    .plan-price {
+        font-size: 2.2rem;
+    }
+
+    .plan-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .final-cta h3 {
+        font-size: 1.1rem;
+    }
+
+    .login-btn {
+        max-width: 100%;
+        padding: 0.8rem 1.5rem;
     }
 }
