@@ -20,6 +20,51 @@ document.addEventListener("DOMContentLoaded", () => {
   let autosaveTimeout = null;
   let totalNotes      = 0;
 
+  // --- Per-tab undo/redo history ---
+  const tabHistory = {}; // { tabId: { stack: string[], index: number } }
+
+  function getHistory(tabId) {
+    if (!tabHistory[tabId]) {
+      tabHistory[tabId] = { stack: [''], index: 0 };
+    }
+    return tabHistory[tabId];
+  }
+
+  function pushHistory(tabId, value) {
+    if (!tabId) return;
+    const h = getHistory(tabId);
+    // Drop redo states
+    h.stack = h.stack.slice(0, h.index + 1);
+    // Avoid duplicate consecutive entries
+    if (h.stack[h.index] === value) return;
+    h.stack.push(value);
+    // Keep history bounded to 200 states
+    if (h.stack.length > 200) {
+      h.stack.shift();
+    } else {
+      h.index = h.stack.length - 1;
+    }
+  }
+
+  function undoHistory(tabId) {
+    const h = getHistory(tabId);
+    if (h.index > 0) {
+      h.index--;
+      return h.stack[h.index];
+    }
+    return null;
+  }
+
+  function redoHistory(tabId) {
+    const h = getHistory(tabId);
+    if (h.index < h.stack.length - 1) {
+      h.index++;
+      return h.stack[h.index];
+    }
+    return null;
+  }
+  // --- End undo/redo history ---
+
   const TITLE_MAX_LENGTH   = 100;
   const CONTENT_MAX_LENGTH = 5000;
 
@@ -28,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const tokenParam = params.get("token");
   if (tokenParam) {
     localStorage.setItem("jwt", tokenParam);
-    window.history.replaceState({}, document.title, "note.html");
+    window.history.replaceState({}, document.title, "note-dev.html");
   }
 
   const jwt = localStorage.getItem("jwt");
@@ -83,12 +128,17 @@ document.addEventListener("DOMContentLoaded", () => {
     triggerAutosave();
   });
 
-  // Content limit + autosave + line‐numbers
+  // Content limit + autosave + line-numbers + push to undo history
   noteContent.addEventListener("input", () => {
     if (noteContent.value.length > CONTENT_MAX_LENGTH) {
       noteContent.value = noteContent.value.slice(0, CONTENT_MAX_LENGTH);
       showRedBox(`O conteúdo não pode ultrapassar ${CONTENT_MAX_LENGTH} caracteres.`);
     }
+    // Sync current content to tab object
+    const tab = openTabs.find(t => t.id === activeNoteId);
+    if (tab) tab.content = noteContent.value;
+    // Push state to undo history (debounced by input nature)
+    pushHistory(activeNoteId, noteContent.value);
     triggerAutosave();
     updateLineNumbers();
     updateStatusBar();
@@ -103,8 +153,8 @@ document.addEventListener("DOMContentLoaded", () => {
     lineNumbers.scrollTop = noteContent.scrollTop;
   });
 
-  // Tab indent/outdent & Ctrl+S
-  noteContent.addEventListener("keydown", handleTabAndSave);
+  // Tab indent/outdent, Ctrl+S, Ctrl+Z, Ctrl+Y
+  noteContent.addEventListener("keydown", handleKeyDown);
   noteTitle.addEventListener("keydown", handleTabAndSave);
 
   // Initial load
@@ -352,6 +402,10 @@ document.addEventListener("DOMContentLoaded", () => {
       switchTab(note.id);
     } else {
       openTabs.push({ ...note });
+      // Initialize history for this note with its current content
+      if (!tabHistory[note.id]) {
+        tabHistory[note.id] = { stack: [note.content || ''], index: 0 };
+      }
       renderTabs(); // Render because a new tab was added
       switchTab(note.id);
     }
@@ -442,6 +496,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (tab) {
       noteTitle.value = tab.title || "";
       noteContent.value = tab.content || "";
+      // Ensure history is seeded for this tab
+      if (!tabHistory[noteId]) {
+        tabHistory[noteId] = { stack: [tab.content || ''], index: 0 };
+      }
       updateSelectedNoteUI();
       updateLineNumbers();
       updateStatusBar();
@@ -453,6 +511,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (tabIndex === -1) return;
 
     openTabs.splice(tabIndex, 1);
+    // Clean up history for closed tab
+    delete tabHistory[noteId];
     
     if (activeNoteId === noteId) {
       if (openTabs.length > 0) {
@@ -486,6 +546,8 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     
     openTabs.push(newNoteTemplate);
+    // Seed empty history for new note
+    tabHistory[newNoteTemplate.id] = { stack: [''], index: 0 };
     renderTabs();
     switchTab(newNoteTemplate.id);
   }
@@ -533,6 +595,11 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .then(data => {
         if (isNew && data.id) {
+          // Migrate undo history to the real ID
+          if (tabHistory[currentTab.id]) {
+            tabHistory[data.id] = tabHistory[currentTab.id];
+            delete tabHistory[currentTab.id];
+          }
           currentTab.id = data.id;
           currentTab.isTemp = false;
           activeNoteId = data.id;
@@ -635,27 +702,78 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function handleTabAndSave(event) {
+  function handleKeyDown(event) {
+    // CTRL+Z — Undo
+    if (event.ctrlKey && !event.shiftKey && event.key.toLowerCase() === "z") {
+      event.preventDefault();
+      if (!activeNoteId) return;
+      const prev = undoHistory(activeNoteId);
+      if (prev !== null) {
+        const cursor = noteContent.selectionStart;
+        noteContent.value = prev;
+        // Restore cursor as close as possible
+        noteContent.selectionStart = noteContent.selectionEnd = Math.min(cursor, prev.length);
+        const tab = openTabs.find(t => t.id === activeNoteId);
+        if (tab) tab.content = prev;
+        triggerAutosave();
+        updateLineNumbers();
+        updateStatusBar();
+      }
+      return;
+    }
+
+    // CTRL+Y or CTRL+SHIFT+Z — Redo
+    if (event.ctrlKey && (event.key.toLowerCase() === "y" || (event.shiftKey && event.key.toLowerCase() === "z"))) {
+      event.preventDefault();
+      if (!activeNoteId) return;
+      const next = redoHistory(activeNoteId);
+      if (next !== null) {
+        const cursor = noteContent.selectionStart;
+        noteContent.value = next;
+        noteContent.selectionStart = noteContent.selectionEnd = Math.min(cursor, next.length);
+        const tab = openTabs.find(t => t.id === activeNoteId);
+        if (tab) tab.content = next;
+        triggerAutosave();
+        updateLineNumbers();
+        updateStatusBar();
+      }
+      return;
+    }
+
+    // Tab indent/outdent
     if (event.key === "Tab") {
       event.preventDefault();
-      const start = this.selectionStart;
-      const end   = this.selectionEnd;
+      const start = noteContent.selectionStart;
+      const end   = noteContent.selectionEnd;
       if (event.shiftKey) {
-        if (this.value.substring(0, start).endsWith("\t")) {
-          this.value =
-            this.value.substring(0, start - 1) +
-            this.value.substring(end);
-          this.selectionStart = this.selectionEnd = start - 1;
+        if (noteContent.value.substring(0, start).endsWith("\t")) {
+          noteContent.value =
+            noteContent.value.substring(0, start - 1) +
+            noteContent.value.substring(end);
+          noteContent.selectionStart = noteContent.selectionEnd = start - 1;
         }
       } else {
-        this.value =
-          this.value.substring(0, start) +
+        noteContent.value =
+          noteContent.value.substring(0, start) +
           "\t" +
-          this.value.substring(end);
-        this.selectionStart = this.selectionEnd = start + 1;
+          noteContent.value.substring(end);
+        noteContent.selectionStart = noteContent.selectionEnd = start + 1;
       }
+      pushHistory(activeNoteId, noteContent.value);
+      const tab = openTabs.find(t => t.id === activeNoteId);
+      if (tab) tab.content = noteContent.value;
       updateLineNumbers();
+      return;
     }
+
+    // CTRL+S — Save
+    if (event.ctrlKey && event.key.toLowerCase() === "s") {
+      event.preventDefault();
+      saveNote();
+    }
+  }
+
+  function handleTabAndSave(event) {
     if (event.ctrlKey && event.key.toLowerCase() === "s") {
       event.preventDefault();
       saveNote();
